@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import SiteLayout from './(site)/layout';
 
 export default function NotFound() {
   return (
+    <SiteLayout>
     <section className="container thanks">
       <p className="eyebrow" style={{ justifyContent: 'center' }}>404</p>
       <h1>We couldn’t find that page</h1>
@@ -12,5 +14,6 @@ export default function NotFound() {
         <Link href="/contact" className="btn btn-ghost">Contact</Link>
       </p>
     </section>
+    </SiteLayout>
   );
 }
