@@ -163,7 +163,7 @@ export async function storeStatus() {
   let envUsersValid = false;
   try { envUsersValid = Array.isArray(JSON.parse(process.env.ADMIN_USERS || 'x')); } catch { /* invalid */ }
   const { store, sha } = await readStore(true);
-  return { keySource: source, envUsersValid, githubAccess: canSave(), storeFile: sha ? (store ? 'readable' : 'unreadable') : 'missing', storeUsers: store?.users?.length || 0, githubStatus: lastStoreRead, repo: repo(), branch: branch() };
+  return { keySource: source, envUsersValid, githubAccess: canSave(), storeFile: sha ? (store ? 'readable' : 'unreadable') : 'missing', storeUsers: store?.users?.length || 0, githubStatus: lastStoreRead, tokens: await tokenReport() };
 }
 
 /** Current store, created from the environment users the first time it is needed. */
@@ -214,21 +214,51 @@ export async function changePassword(session: Session, current: string, next: st
 /* ------------------------------------------------------------ GitHub storage */
 
 const repo = () => process.env.GITHUB_REPO || 'kingkpono2/Vanokibs-whitelabel';
-/** The GitHub token: GITHUB_TOKEN, or GITHUB_USER (the name used in this project's Vercel settings). */
-const token = () => process.env.GITHUB_TOKEN || process.env.GITHUB_USER || '';
 const branch = () => process.env.GITHUB_BRANCH || 'main';
-const gh = (path: string, init?: RequestInit) =>
+/** Candidate GitHub tokens, by setting name. Whichever GitHub accepts is used (and remembered). */
+const tokenCandidates = () =>
+  (['GITHUB_TOKEN', 'GITHUB_USER'] as const)
+    .map((name) => ({ name, value: (process.env[name] || '').trim() }))
+    .filter((t, i, all) => t.value.length > 20 && all.findIndex((x) => x.value === t.value) === i);
+let workingToken: string | null = null;
+const token = () => workingToken || tokenCandidates()[0]?.value || '';
+
+const ghFetch = (path: string, tok: string, init?: RequestInit) =>
   fetch(`https://api.github.com/repos/${repo()}/contents/${path}`, {
     ...init,
     cache: 'no-store',
     headers: {
       Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${token()}`,
+      Authorization: `Bearer ${tok}`,
       'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'vanokibs-admin',
       ...(init?.headers || {}),
     },
   });
+
+/** Calls GitHub with the token that works; on 401 tries the other setting. */
+async function gh(path: string, init?: RequestInit) {
+  let res = await ghFetch(path, token(), init);
+  if (res.status === 401) {
+    for (const t of tokenCandidates()) {
+      if (t.value === token()) continue;
+      const retry = await ghFetch(path, t.value, init);
+      if (retry.status !== 401) { workingToken = t.value; return retry; }
+      res = retry;
+    }
+  }
+  return res;
+}
+
+/** Which token settings GitHub accepts (names and status codes only). */
+export async function tokenReport() {
+  const out: Record<string, number> = {};
+  for (const t of tokenCandidates()) {
+    const r = await ghFetch(`src/content/editable.json?ref=${encodeURIComponent(branch())}`, t.value, { method: 'GET' });
+    out[t.name] = r.status;
+  }
+  return out;
+}
 
 export const canSave = () => token().length > 20;
 
