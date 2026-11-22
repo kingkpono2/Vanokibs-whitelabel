@@ -62,7 +62,7 @@ Set up in **Vercel → Settings → Environment Variables**:
 - `ADMIN_USERS`: the list of admin logins with **hashed** passwords (never plain text, never committed to the repo). Format:
   `[{"email":"owner@example.com","role":"owner","hash":"scrypt$<salt>$<key>"}]`.
   To create a hash: `node -e "const c=require('crypto');const s=c.randomBytes(16);console.log('scrypt$'+s.toString('base64url')+'$'+c.scryptSync(process.argv[1],s,32,{N:16384,r:8,p:1}).toString('base64url'))" 'NEW-PASSWORD'`
-- `GITHUB_TOKEN`: a fine-grained GitHub token with **Contents: Read and write** on this repository only. Without it, the admin opens read-only.
+- `GITHUB_TOKEN` (or `GITHUB_USER`): a GitHub token with **Contents: Read and write** on this repository only. Without it, the admin opens read-only.
 - Optional: `GITHUB_REPO` (default `kingkpono2/Vanokibs-whitelabel`), `GITHUB_BRANCH` (default `main`), `ADMIN_SECRET` (session key; derived from `ADMIN_USERS` if not set).
 
 Removing a user from `ADMIN_USERS` (and redeploying) revokes their access immediately.

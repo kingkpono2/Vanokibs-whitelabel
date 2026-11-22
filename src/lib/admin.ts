@@ -77,6 +77,8 @@ export function getSession(req: Request): Session | null {
 /* ------------------------------------------------------------ GitHub storage */
 
 const repo = () => process.env.GITHUB_REPO || 'kingkpono2/Vanokibs-whitelabel';
+/** The GitHub token: GITHUB_TOKEN, or GITHUB_USER (the name used in this project's Vercel settings). */
+const token = () => process.env.GITHUB_TOKEN || process.env.GITHUB_USER || '';
 const branch = () => process.env.GITHUB_BRANCH || 'main';
 const gh = (path: string, init?: RequestInit) =>
   fetch(`https://api.github.com/repos/${repo()}/contents/${path}`, {
@@ -84,14 +86,14 @@ const gh = (path: string, init?: RequestInit) =>
     cache: 'no-store',
     headers: {
       Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      Authorization: `Bearer ${token()}`,
       'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'vanokibs-admin',
       ...(init?.headers || {}),
     },
   });
 
-export const canSave = () => Boolean(process.env.GITHUB_TOKEN);
+export const canSave = () => token().length > 20;
 
 /** Plain-English explanation of a GitHub API error, shown in the admin. */
 export class GitHubError extends Error {
