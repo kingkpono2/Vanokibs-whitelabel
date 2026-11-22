@@ -12,7 +12,11 @@ export const brand = {
   legalName: b.name,
   tagline: b.tagline,
   description: b.description,
-  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || 'https://vanokibs.vercel.app').replace(/\/$/, ''),
+  // Your domain if set; otherwise Vercel's production address (provided automatically at build time).
+  siteUrl: (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'https://vanokibs-whitelabel.vercel.app')
+  ).replace(/\/$/, ''),
   email: b.email || process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
   phone: b.phone || process.env.NEXT_PUBLIC_CONTACT_PHONE || '',
   country: 'Canada',

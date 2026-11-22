@@ -37,7 +37,7 @@ Services covered: managed IT & tech support, custom software, DevOps & cloud, AW
 
 1. In Vercel: **Add New → Project → Import** this repository. The framework (Next.js) is detected automatically. Click **Deploy**.
 2. In **Settings → Environment Variables**, add the values from `.env.example`:
-   - `NEXT_PUBLIC_SITE_URL`: your live address, e.g. `https://vanokibs.vercel.app` or your own domain. This sets canonical URLs and the sitemap.
+   - `NEXT_PUBLIC_SITE_URL`: your live address, e.g. `https://vanokibs-whitelabel.vercel.app` or your own domain. This sets canonical URLs and the sitemap.
    - `NEXT_PUBLIC_CONTACT_EMAIL` / `NEXT_PUBLIC_CONTACT_PHONE`: optional; shown in the footer and on the contact page.
    - `STRIPE_SECRET_KEY`: enables real checkout for subscriptions, packages and hours. Without it, every buy button opens the quote form with the item pre-filled, so nothing is a dead end.
    - `STRIPE_AUTOMATIC_TAX=true`: set this once Stripe Tax is set up with your GST/HST/QST registrations.
