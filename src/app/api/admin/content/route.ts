@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   const session = getSession(req);
-  if (!session) return Response.json({ message: 'Please sign in.' }, { status: 401 });
+  if (!session) return Response.json({ user: null }); // not signed in: the admin shows the sign-in form
   try {
     const { data, sha } = await readContent();
     return Response.json({ data, sha, canSave: canSave(), user: session });

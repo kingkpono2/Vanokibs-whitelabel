@@ -107,7 +107,7 @@ const baseServices: Service[] = [
     short: 'Manual and automated testing for web, mobile and APIs, built into your release process.',
     icon: 'check',
     image: '/images/code.webp',
-    metaTitle: 'QA & Software Testing Services Canada | Test Automation',
+    metaTitle: 'QA & Software Testing Services Canada',
     metaDescription:
       'Software testing for Canadian businesses: manual QA, test automation with Playwright and Cypress, mobile app testing, API, performance and accessibility (WCAG/AODA) testing, integrated with CI/CD.',
     headline: 'QA and software testing for web, mobile and APIs',
@@ -179,7 +179,7 @@ const baseServices: Service[] = [
     short: 'EC2 servers, SES email, S3, RDS, Lambda, CloudFront and more, set up and managed.',
     icon: 'cloud',
     image: '/images/server1.webp',
-    metaTitle: 'AWS Consulting & Managed Services Canada | EC2, SES, S3',
+    metaTitle: 'AWS Consulting & Managed Services Canada',
     metaDescription:
       'AWS set-up and management for Canadian businesses: EC2 servers, Amazon SES email, S3 storage, RDS databases, Lambda, CloudFront, Route 53, VPC security, backups and cost control in ca-central-1.',
     headline: 'AWS set-up and management, from EC2 to SES',

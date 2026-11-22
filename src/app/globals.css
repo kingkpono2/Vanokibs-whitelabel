@@ -463,3 +463,5 @@ p { margin: 0 0 1em; }
 .adm-blocked li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
 .adm-past summary { cursor: pointer; font-weight: 600; margin-bottom: 8px; }
 .mt-s { margin-top: 10px; }
+.btn { max-width: 100%; }
+@media (max-width: 640px) { .btn { white-space: normal; text-align: center; } }

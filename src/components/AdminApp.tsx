@@ -105,8 +105,8 @@ export function AdminApp() {
 
   const load = useCallback(async () => {
     const res = await fetch('/api/admin/content', { cache: 'no-store' });
-    if (res.status === 401) { setUser(null); return; }
     const body = await res.json();
+    if (res.status === 401 || !body.user) { setUser(null); return; }
     if (!res.ok) { setMsg({ kind: 'err', text: body.message }); return; }
     setUser(body.user); setData(body.data); setSha(body.sha || ''); setCanSave(body.canSave); setDirty(false);
   }, []);
