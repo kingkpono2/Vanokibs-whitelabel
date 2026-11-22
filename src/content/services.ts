@@ -24,7 +24,9 @@ export type IconName =
   | 'mobile' | 'mail' | 'shield' | 'chart' | 'bolt' | 'clock' | 'check' | 'maple' | 'users'
   | 'rocket' | 'arrow' | 'globe' | 'lock' | 'server' | 'calendar' | 'spark' | 'chat' | 'factory' | 'briefcase';
 
-export const services: Service[] = [
+import content from './editable.json';
+
+const baseServices: Service[] = [
   {
     slug: 'managed-it-support',
     name: 'Managed IT & Tech Support',
@@ -134,6 +136,46 @@ export const services: Service[] = [
       { q: 'We are on shared hosting. Is DevOps overkill?', a: 'Not necessarily. Often the first step is moving to a managed platform with backups and automated deploys, which costs little and removes a lot of risk.' },
     ],
     related: ['custom-software-development', 'business-email-smtp', 'managed-it-support'],
+  },
+  {
+    slug: 'aws-cloud-services',
+    name: 'AWS Cloud Services',
+    short: 'EC2 servers, SES email, S3, RDS, Lambda, CloudFront and more, set up and managed.',
+    icon: 'cloud',
+    image: '/images/server1.webp',
+    metaTitle: 'AWS Consulting & Managed Services Canada | EC2, SES, S3',
+    metaDescription:
+      'AWS set-up and management for Canadian businesses: EC2 servers, Amazon SES email, S3 storage, RDS databases, Lambda, CloudFront, Route 53, VPC security, backups and cost control in ca-central-1.',
+    headline: 'AWS set-up and management, from EC2 to SES',
+    intro:
+      'We design, set up and run your AWS account properly: secure networking, right-sized servers, managed databases, reliable email sending and backups, in Canadian regions where your data needs to stay in Canada.',
+    outcomes: [
+      'A secure AWS account structure with MFA, least-privilege IAM and audit logging',
+      'Servers and databases sized for your workload, with automatic backups',
+      'Email from your apps delivered through Amazon SES with full authentication',
+      'Monitoring, alerts and a monthly cost review',
+    ],
+    deliverables: [
+      { title: 'EC2 servers', text: 'Launch and harden Linux or Windows servers: patching, SSH/SSM access, security groups, Elastic IPs and auto-recovery.' },
+      { title: 'Amazon SES', text: 'Domain verification, DKIM/SPF/DMARC, production access, SMTP credentials, and bounce and complaint handling.' },
+      { title: 'S3 & CloudFront', text: 'Storage for files, backups and static sites, with encryption, lifecycle rules and a fast CDN.' },
+      { title: 'RDS & Aurora', text: 'Managed MySQL and PostgreSQL with backups, encryption, read replicas and maintenance windows.' },
+      { title: 'Lambda & API Gateway', text: 'Serverless functions and APIs for integrations, scheduled jobs and webhooks.' },
+      { title: 'Route 53 & certificates', text: 'DNS, domain transfers, health checks and free TLS certificates through ACM.' },
+      { title: 'VPC & security', text: 'Private networks, IAM roles, AWS Organizations, CloudTrail, GuardDuty and Security Hub.' },
+      { title: 'Containers', text: 'ECS, Fargate and EKS for containerised applications, with ECR image registries.' },
+      { title: 'Monitoring & backup', text: 'CloudWatch dashboards and alarms, AWS Backup plans and tested restores.' },
+      { title: 'Migration & cost control', text: 'Move from shared hosting or other clouds; Savings Plans, right-sizing and budgets with alerts.' },
+    ],
+    stack: ['EC2', 'Amazon SES', 'S3', 'CloudFront', 'RDS', 'Lambda', 'Route 53', 'VPC', 'IAM', 'ECS', 'CloudWatch', 'AWS Backup'],
+    bestFor: 'Businesses moving to AWS, or already on AWS without someone to look after it.',
+    startingAt: 'EC2 server set-up $1,900; Amazon SES set-up $690; ongoing care from the Essentials plan',
+    faqs: [
+      { q: 'Can our AWS resources stay in Canada?', a: 'Yes. We build in Canada (Central) in Montréal or Canada West in Calgary, and can restrict other regions with account policies.' },
+      { q: 'Do you need our root account?', a: 'No. We use named IAM users or SSO roles with MFA, and you keep the root account locked away.' },
+      { q: 'How long does SES production access take?', a: 'AWS usually reviews the request within one business day. We prepare the request with your sending details so it is approved first time.' },
+    ],
+    related: ['devops-cloud', 'business-email-smtp', 'managed-it-support'],
   },
   {
     slug: 'ecommerce-development',
@@ -419,5 +461,11 @@ export const services: Service[] = [
     related: ['managed-it-support', 'devops-cloud', 'wordpress'],
   },
 ];
+
+/** Editable text (name, summary, headline, intro, price hint, outcomes) comes from editable.json. */
+export const services: Service[] = baseServices.map((s) => {
+  const o = content.services.find((x) => x.slug === s.slug);
+  return o ? { ...s, name: o.name, short: o.short, headline: o.headline, intro: o.intro, startingAt: o.startingAt, outcomes: o.outcomes } : s;
+});
 
 export const serviceBySlug = (slug: string) => services.find((s) => s.slug === slug);

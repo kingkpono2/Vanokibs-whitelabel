@@ -402,3 +402,32 @@ p { margin: 0 0 1em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Platforms with logos */
+.platforms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.platforms__group h3 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 12px; }
+.platforms__group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.platforms__group li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); font-weight: 500; font-size: 15px; color: var(--ink); }
+.platforms__group img { width: 28px; height: 28px; object-fit: contain; flex: none; }
+.chips li { display: inline-flex; align-items: center; gap: 8px; }
+.chips img { width: 18px; height: 18px; object-fit: contain; }
+@media (max-width: 1080px) { .platforms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .platforms { grid-template-columns: minmax(0, 1fr); } }
+
+/* Admin */
+.adm { padding-top: 40px; padding-bottom: 80px; }
+.adm-login { max-width: 420px; margin: 40px auto; }
+.adm-login h1 { font-size: 28px; }
+.adm-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: flex-end; margin-bottom: 18px; }
+.adm-bar h1 { font-size: 30px; margin: 0 0 4px; }
+.adm-actions { display: flex; gap: 10px; }
+.adm-tabs { position: static; transform: none; left: auto; margin: 8px 0 20px; flex-wrap: wrap; }
+.adm-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.adm-fields { display: grid; gap: 14px; }
+.adm-list { border: 0; padding: 0; margin: 0; display: grid; gap: 14px; }
+.adm-list legend { font-weight: 600; margin-bottom: 10px; }
+.adm-item { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px; background: var(--bg-soft); }
+.adm-item__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.adm-check { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14.5px; }
+.adm-ok { margin: 0 0 12px; color: var(--teal); background: var(--teal-50); padding: 12px 14px; border-radius: 6px; }
+.field textarea { resize: vertical; }

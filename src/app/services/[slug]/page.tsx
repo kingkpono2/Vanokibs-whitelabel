@@ -7,6 +7,7 @@ import { industries } from '@/content/industries';
 import { locations } from '@/content/locations';
 import { Breadcrumbs, CtaBand, FaqList, ServiceCard, Check } from '@/components/Bits';
 import { JsonLd } from '@/components/JsonLd';
+import { StackChips } from '@/components/Platforms';
 import { faqLd, pageMeta, serviceLd } from '@/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -74,7 +75,7 @@ export default async function ServicePage({ params }: Props) {
           </div>
           <div className="mt">
             <h3>Technologies we use</h3>
-            <ul className="chips">{s.stack.map((t) => <li key={t}>{t}</li>)}</ul>
+            <StackChips items={s.stack} />
           </div>
         </div>
       </section>

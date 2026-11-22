@@ -6,15 +6,16 @@ A fast, SEO-focused Next.js site that lets Canadian companies hire a technology 
 - **One-time projects**: fixed-price packages, with a 30% deposit for larger ones
 - **As needed**: prepaid hour blocks or pay-as-you-go
 
-Services covered: managed IT & tech support, custom software, DevOps & cloud, ecommerce, fintech, ERP, Odoo, Magento, WordPress, mobile apps, and business email / SMTP / cloud services.
+Services covered: managed IT & tech support, custom software, DevOps & cloud, AWS (EC2, SES, S3, RDS and more), ecommerce, fintech, ERP, Odoo, Magento, WordPress, mobile apps, and business email / SMTP / cloud services.
 
 ## What's inside
 
 | Area | Where |
 |---|---|
 | Brand name, contact details (white-label) | `src/content/brand.ts` + environment variables |
-| Prices (CAD), plans, packages, hour blocks | `src/content/plans.ts` |
-| Service pages (11) | `src/content/services.ts` |
+| Editable content: company details, homepage text, prices, service text | `src/content/editable.json` (edited through `/admin`) |
+| Price types and checkout helpers | `src/content/plans.ts` |
+| Service pages (12) | `src/content/services.ts` |
 | Industry pages (4) | `src/content/industries.ts` |
 | City pages (8) | `src/content/locations.ts` |
 | Insights articles (4) | `src/content/posts.ts` |
@@ -45,6 +46,27 @@ Services covered: managed IT & tech support, custom software, DevOps & cloud, ec
 4. Optional: **Settings → Domains** to add your own domain, then update `NEXT_PUBLIC_SITE_URL`.
 5. Submit `https://<your-domain>/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
 
+## Admin (edit content without code)
+
+Go to **/admin** and sign in. Two roles:
+
+| Role | Can edit |
+|---|---|
+| Owner | Company details, homepage text and FAQs, service text, **all prices** |
+| Support | Company details, homepage text and FAQs, service text. **Prices are locked** (enforced on the server) |
+
+Each save commits `src/content/editable.json` to GitHub, so every change is versioned and can be reverted. Vercel then redeploys automatically and the live site updates in about 1–2 minutes.
+
+Set up in **Vercel → Settings → Environment Variables**:
+
+- `ADMIN_USERS`: the list of admin logins with **hashed** passwords (never plain text, never committed to the repo). Format:
+  `[{"email":"owner@example.com","role":"owner","hash":"scrypt$<salt>$<key>"}]`.
+  To create a hash: `node -e "const c=require('crypto');const s=c.randomBytes(16);console.log('scrypt$'+s.toString('base64url')+'$'+c.scryptSync(process.argv[1],s,32,{N:16384,r:8,p:1}).toString('base64url'))" 'NEW-PASSWORD'`
+- `GITHUB_TOKEN`: a fine-grained GitHub token with **Contents: Read and write** on this repository only. Without it, the admin opens read-only.
+- Optional: `GITHUB_REPO` (default `kingkpono2/Vanokibs-whitelabel`), `GITHUB_BRANCH` (default `main`), `ADMIN_SECRET` (session key; derived from `ADMIN_USERS` if not set).
+
+Removing a user from `ADMIN_USERS` (and redeploying) revokes their access immediately.
+
 ## Run locally
 
 ```bash
@@ -58,7 +80,7 @@ Requires Node.js 20.9 or later.
 
 ## Change prices or rebrand
 
-- **Prices**: edit `src/content/plans.ts`. Checkout reads prices on the server from this file, so the browser can never change what is charged.
+- **Prices and text**: use `/admin`, or edit `src/content/editable.json`. Checkout reads prices on the server, so the browser can never change what is charged.
 - **Brand**: edit `src/content/brand.ts`, the `Logo` component and the colour tokens at the top of `src/app/globals.css`.
 
 All prices are in CAD and exclude GST/HST/QST. The legal pages are starting templates; have them reviewed by counsel.

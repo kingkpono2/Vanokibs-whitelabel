@@ -1,0 +1,406 @@
+{
+  "brand": {
+    "name": "Vanokibs",
+    "tagline": "IT, software and cloud services for Canadian businesses",
+    "description": "IT support, software development, DevOps and cloud services for Canadian businesses, by monthly plan, project or hour.",
+    "email": "",
+    "phone": "",
+    "hours": "Monday to Friday, 8:00 to 20:00 Eastern (support plans include after-hours coverage)"
+  },
+  "home": {
+    "heroTitle": "IT support, software and cloud services for Canadian businesses",
+    "heroText": "One team for your systems, websites and applications. Work with us on a monthly plan, a fixed-price project, or by the hour.",
+    "heroNote": "Clients across Canada · Prices in CAD · Reply within one business day",
+    "faqs": [
+      {
+        "q": "What does a subscription include?",
+        "a": "A set number of hours each month for any of our services, plus monitoring, updates, backups and a monthly report. Unused hours roll over once."
+      },
+      {
+        "q": "Can I hire you for one project?",
+        "a": "Yes. Pick a fixed-price package or ask for a quote. Larger projects start with a deposit and are billed at milestones."
+      },
+      {
+        "q": "Do you work outside Ontario?",
+        "a": "Yes, with clients in every province. We work remotely and cover Atlantic to Pacific business hours."
+      },
+      {
+        "q": "How do payments and taxes work?",
+        "a": "Prices are in Canadian dollars. Pay by card through Stripe or by EFT on invoice. GST/HST or QST is added where it applies."
+      }
+    ]
+  },
+  "pricing": {
+    "annualMonthsCharged": 10,
+    "payAsYouGoRate": 145,
+    "emergencyRate": 195,
+    "plans": [
+      {
+        "id": "essentials",
+        "name": "Essentials",
+        "monthly": 1490,
+        "hours": 10,
+        "response": "8 business hours",
+        "blurb": "Keep your systems healthy, safe and supported.",
+        "popular": false,
+        "features": [
+          "10 hours of support or development each month",
+          "Help desk by email and chat, Mon–Fri 8am–8pm ET",
+          "Updates, backups and uptime monitoring for 1 website or app",
+          "Microsoft 365 / Google Workspace admin, up to 25 users",
+          "Email deliverability (SPF, DKIM, DMARC) kept healthy",
+          "Monthly report of work done and risks found"
+        ]
+      },
+      {
+        "id": "growth",
+        "name": "Growth",
+        "monthly": 3900,
+        "hours": 30,
+        "response": "4 business hours",
+        "blurb": "A dedicated team that ships improvements every month.",
+        "popular": true,
+        "features": [
+          "30 hours of development, DevOps or support each month",
+          "Help desk by email, chat and phone",
+          "Dedicated project lead and a shared roadmap",
+          "CI/CD, staging environment and security patching",
+          "Up to 3 websites, stores or apps (WordPress, Magento, Odoo, custom)",
+          "Microsoft 365 / Google Workspace admin, up to 100 users",
+          "Quarterly strategy and cost review"
+        ]
+      },
+      {
+        "id": "scale",
+        "name": "Scale",
+        "monthly": 8900,
+        "hours": 80,
+        "response": "1 hour for critical issues, 24/7",
+        "blurb": "Your outsourced engineering and operations department.",
+        "popular": false,
+        "features": [
+          "80 hours across developers, DevOps and support each month",
+          "24/7 monitoring and on-call for critical incidents",
+          "Solutions architect and senior engineers assigned to you",
+          "Infrastructure as code, observability and disaster-recovery drills",
+          "Unlimited websites, stores and apps under management",
+          "Security reviews and audit evidence (SOC 2, PIPEDA)",
+          "Monthly executive report and roadmap session"
+        ]
+      }
+    ],
+    "packages": [
+      {
+        "id": "email-smtp-setup",
+        "name": "Business Email & SMTP Set-up",
+        "price": 890,
+        "deposit": 0,
+        "blurb": "Professional email that reaches the inbox.",
+        "includes": [
+          "Microsoft 365 or Google Workspace for up to 25 mailboxes",
+          "SPF, DKIM and DMARC configured and verified",
+          "Transactional SMTP for your website or app",
+          "Mailbox migration and a handover guide"
+        ],
+        "timeline": "3–5 business days",
+        "service": "business-email-smtp"
+      },
+      {
+        "id": "website-audit",
+        "name": "Website Speed & Security Audit",
+        "price": 1200,
+        "deposit": 0,
+        "blurb": "Find out exactly what is slowing or exposing your site.",
+        "includes": [
+          "Core Web Vitals and speed analysis",
+          "Security, plugin and hosting review",
+          "SEO technical check",
+          "Prioritised fix list with estimates"
+        ],
+        "timeline": "5 business days",
+        "service": "wordpress"
+      },
+      {
+        "id": "aws-ec2-setup",
+        "name": "AWS Server Set-up (EC2)",
+        "price": 1900,
+        "deposit": 0,
+        "blurb": "A secure, backed-up server on AWS in a Canadian region.",
+        "includes": [
+          "VPC, security groups and IAM with MFA",
+          "Hardened EC2 server with automatic patching",
+          "Daily backups, monitoring and alerts",
+          "TLS certificate, DNS and a handover guide"
+        ],
+        "timeline": "3–5 business days",
+        "service": "aws-cloud-services"
+      },
+      {
+        "id": "aws-ses-setup",
+        "name": "Amazon SES Set-up",
+        "price": 690,
+        "deposit": 0,
+        "blurb": "Reliable email sending for your website or app.",
+        "includes": [
+          "Domain verification with DKIM, SPF and DMARC",
+          "Production access request prepared for you",
+          "SMTP credentials connected to your app",
+          "Bounce and complaint handling"
+        ],
+        "timeline": "2–3 business days",
+        "service": "aws-cloud-services"
+      },
+      {
+        "id": "devops-audit",
+        "name": "DevOps & Cloud Audit",
+        "price": 2900,
+        "deposit": 0,
+        "blurb": "A clear plan to deploy safely and spend less on cloud.",
+        "includes": [
+          "Architecture, CI/CD and security review",
+          "Cloud cost analysis with savings ranked by effort",
+          "Backup and disaster-recovery check",
+          "Written report and walkthrough call"
+        ],
+        "timeline": "2 weeks",
+        "service": "devops-cloud"
+      },
+      {
+        "id": "wordpress-launch",
+        "name": "WordPress Website Launch",
+        "price": 4900,
+        "deposit": 1470,
+        "blurb": "A fast, accessible business website your team can edit.",
+        "includes": [
+          "Up to 8 custom-designed pages",
+          "Mobile-first, WCAG 2.1 AA accessible",
+          "SEO foundations and Google Analytics 4",
+          "Editor training and 30 days of support"
+        ],
+        "timeline": "4–6 weeks",
+        "service": "wordpress"
+      },
+      {
+        "id": "store-launch",
+        "name": "Ecommerce Store Launch",
+        "price": 9500,
+        "deposit": 2850,
+        "blurb": "A Shopify or WooCommerce store ready to sell across Canada.",
+        "includes": [
+          "Custom storefront on Shopify or WooCommerce",
+          "Canadian taxes, shipping and payments",
+          "Up to 100 products imported",
+          "Analytics, email capture and launch support"
+        ],
+        "timeline": "6–8 weeks",
+        "service": "ecommerce-development"
+      },
+      {
+        "id": "odoo-starter",
+        "name": "Odoo ERP Starter",
+        "price": 14900,
+        "deposit": 4470,
+        "blurb": "Sales, inventory, purchasing and accounting in one system.",
+        "includes": [
+          "Process mapping workshop",
+          "Odoo set-up with Canadian localisation",
+          "Data migration (products, contacts, opening stock)",
+          "Staff training and 60 days of support"
+        ],
+        "timeline": "8–12 weeks",
+        "service": "odoo"
+      }
+    ],
+    "hourBlocks": [
+      {
+        "id": "hours-5",
+        "hours": 5,
+        "price": 690,
+        "validity": "Valid 6 months"
+      },
+      {
+        "id": "hours-10",
+        "hours": 10,
+        "price": 1290,
+        "validity": "Valid 6 months"
+      },
+      {
+        "id": "hours-25",
+        "hours": 25,
+        "price": 2990,
+        "validity": "Valid 12 months"
+      }
+    ]
+  },
+  "services": [
+    {
+      "slug": "managed-it-support",
+      "name": "Managed IT & Tech Support",
+      "short": "Help desk, device and account management, monitoring and security for your team.",
+      "headline": "Managed IT support for small and mid-sized businesses",
+      "intro": "Your team should not lose an afternoon to a locked account, a failing laptop or a printer that vanished from the network. We run your help desk, manage users and devices, watch your systems and keep everything patched, so problems are solved quickly and stop coming back.",
+      "startingAt": "Included in every subscription plan, or prepaid hours from $120/hour",
+      "outcomes": [
+        "Help desk by email, chat and phone during Canadian business hours, with after-hours cover on higher plans",
+        "Onboarding and offboarding done the same day, with access removed when people leave",
+        "Laptops and phones enrolled, encrypted and patched automatically",
+        "Daily backups you have actually tested restoring",
+        "A monthly report: tickets, response times, risks found and what we fixed"
+      ]
+    },
+    {
+      "slug": "custom-software-development",
+      "name": "Custom Software Development",
+      "short": "Web apps, portals, integrations and internal tools built around how you work.",
+      "headline": "Custom web applications, portals and integrations",
+      "intro": "Spreadsheets and copy-paste between systems work until they don’t. We design and build the web apps, portals and integrations that remove that manual work: clean code, automated tests and documentation your next developer will thank you for.",
+      "startingAt": "Discovery from $2,900; builds by fixed quote or a Growth/Scale plan",
+      "outcomes": [
+        "A clickable prototype within the first two weeks, so you see it before you pay for all of it",
+        "Working software every two weeks, deployed to a test environment you can use",
+        "Automated tests and CI/CD from day one",
+        "Source code, documentation and accounts that belong to you"
+      ]
+    },
+    {
+      "slug": "devops-cloud",
+      "name": "DevOps & Cloud Engineering",
+      "short": "CI/CD, infrastructure as code, monitoring and cost control on AWS, Azure and GCP.",
+      "headline": "DevOps and cloud engineering on AWS, Azure and Google Cloud",
+      "intro": "Manual deployments, surprise outages and a cloud bill nobody can explain are signs the platform has outgrown how it is run. We automate builds and releases, put everything in code, add proper monitoring and cut waste, with Canadian regions wherever your data needs to stay in the country.",
+      "startingAt": "DevOps & cloud audit $2,900; ongoing work from the Growth plan",
+      "outcomes": [
+        "One-click (or automatic) deployments with instant rollback",
+        "Infrastructure defined in code and reviewed like application code",
+        "Dashboards and alerts that tell you about problems before customers do",
+        "A cloud cost review with savings ranked by effort and impact"
+      ]
+    },
+    {
+      "slug": "aws-cloud-services",
+      "name": "AWS Cloud Services",
+      "short": "EC2 servers, SES email, S3, RDS, Lambda, CloudFront and more, set up and managed.",
+      "headline": "AWS set-up and management, from EC2 to SES",
+      "intro": "We design, set up and run your AWS account properly: secure networking, right-sized servers, managed databases, reliable email sending and backups, in Canadian regions where your data needs to stay in Canada.",
+      "startingAt": "EC2 server set-up $1,900; Amazon SES set-up $690; ongoing care from the Essentials plan",
+      "outcomes": [
+        "A secure AWS account structure with MFA, least-privilege IAM and audit logging",
+        "Servers and databases sized for your workload, with automatic backups",
+        "Email from your apps delivered through Amazon SES with full authentication",
+        "Monitoring, alerts and a monthly cost review"
+      ]
+    },
+    {
+      "slug": "ecommerce-development",
+      "name": "Ecommerce Development",
+      "short": "Shopify, WooCommerce and Magento stores that load fast and convert.",
+      "headline": "Ecommerce development for Canadian retailers",
+      "intro": "Selling online in Canada means getting provincial sales tax right, shipping with Canada Post, Purolator or UPS, accepting Interac and cards, and often selling in French as well as English. We build and improve stores that handle all of it, and connect them to the inventory and accounting systems behind them.",
+      "startingAt": "Store launch from $9,500; ongoing growth through a monthly plan",
+      "outcomes": [
+        "Pages that load in under 2 seconds on mobile",
+        "Correct GST, HST, QST and PST by province, ready for your accountant",
+        "Live shipping rates and labels from Canadian carriers",
+        "Orders, stock and customers synced with your ERP or accounting software"
+      ]
+    },
+    {
+      "slug": "fintech-development",
+      "name": "Fintech Development",
+      "short": "Payments, lending, wallets and banking integrations built securely.",
+      "headline": "Software development for fintech and financial services",
+      "intro": "In fintech, the product is only as good as the trust behind it. We build payment flows, onboarding and lending platforms, ledgers and dashboards with the controls regulators and partners expect: strong authentication, complete audit trails, encryption and clear separation of duties.",
+      "startingAt": "Discovery from $2,900; builds by fixed quote or a Scale plan",
+      "outcomes": [
+        "Secure-by-design architecture reviewed against OWASP ASVS",
+        "Double-entry ledgers that reconcile to the cent",
+        "KYC/AML onboarding flows ready for your compliance team",
+        "Evidence packs for bank partners, auditors and SOC 2"
+      ]
+    },
+    {
+      "slug": "erp-implementation",
+      "name": "ERP Implementation & Integration",
+      "short": "Inventory, accounting, purchasing and manufacturing in one system.",
+      "headline": "ERP selection, implementation and integration",
+      "intro": "When inventory lives in one spreadsheet, orders in another and accounting in a third, nobody trusts the numbers. We help you choose the right ERP, implement it in phases, migrate your data and connect it to your store and your accountant, so everyone works from the same truth.",
+      "startingAt": "ERP readiness assessment $3,500; Odoo starter implementation from $14,900",
+      "outcomes": [
+        "Real-time stock across warehouses and sales channels",
+        "Purchase orders, receiving and landed costs handled in one flow",
+        "Month-end close in days instead of weeks",
+        "Staff trained, with written procedures for every key process"
+      ]
+    },
+    {
+      "slug": "odoo",
+      "name": "Odoo Development & Implementation",
+      "short": "Odoo set-up, custom modules, migrations and support.",
+      "headline": "Odoo implementation, development and support",
+      "intro": "Odoo can run sales, inventory, manufacturing, accounting, HR and your website from one platform at a fraction of the cost of traditional ERPs. We implement it properly: the Canadian localisation, the right apps for your processes and custom modules only where the standard ones don’t fit.",
+      "startingAt": "Odoo starter implementation from $14,900; support from the Essentials plan",
+      "outcomes": [
+        "Canadian chart of accounts and GST/HST/QST/PST set up and tested",
+        "Only the apps you need, configured around your real processes",
+        "Custom modules written to Odoo standards, so upgrades stay possible",
+        "Clean upgrade path to new Odoo versions"
+      ]
+    },
+    {
+      "slug": "magento",
+      "name": "Magento (Adobe Commerce) Development",
+      "short": "Magento builds, upgrades, performance and B2B commerce.",
+      "headline": "Magento and Adobe Commerce development and support",
+      "intro": "Magento is powerful for large catalogues and B2B selling, but only when it is kept patched, upgraded and tuned. We take care of the platform (security patches, upgrades, extensions and performance) and build the custom features your buyers need.",
+      "startingAt": "Magento health audit $1,900; ongoing support from the Growth plan",
+      "outcomes": [
+        "Security patches applied within days of release",
+        "Upgrades to the latest supported Magento / Adobe Commerce version",
+        "Faster pages through caching, image and database tuning",
+        "An honest view on whether to stay on Magento or move"
+      ]
+    },
+    {
+      "slug": "wordpress",
+      "name": "WordPress Development & Care",
+      "short": "Fast, secure WordPress sites, WooCommerce stores and monthly care.",
+      "headline": "WordPress development, hosting and maintenance",
+      "intro": "Most WordPress problems come from too many plugins, no updates and no backups. We build lean, custom sites your team can edit easily, then keep them updated, backed up, monitored and fast, so your website keeps working while you get on with business.",
+      "startingAt": "Site launch from $4,900; care from the Essentials plan",
+      "outcomes": [
+        "Green Core Web Vitals and fast mobile pages",
+        "Weekly updates, daily backups and uptime monitoring",
+        "Accessible to WCAG 2.1 AA, which helps with Ontario’s AODA",
+        "Built-in SEO foundations: schema, sitemaps and clean URLs"
+      ]
+    },
+    {
+      "slug": "mobile-app-development",
+      "name": "Mobile App Development",
+      "short": "iOS and Android apps with React Native, Flutter or native code.",
+      "headline": "iOS and Android app development",
+      "intro": "A good app is more than screens: it needs a reliable backend, push notifications, analytics, store listings and regular updates for new OS versions. We take apps from idea to App Store and Google Play, and keep them healthy afterwards.",
+      "startingAt": "App discovery from $2,900; MVPs by fixed quote",
+      "outcomes": [
+        "One codebase for iOS and Android where it makes sense, native where it matters",
+        "Test builds on your phone every sprint",
+        "Store listings, screenshots and review submissions handled for you",
+        "Crash reporting and analytics from launch day"
+      ]
+    },
+    {
+      "slug": "business-email-smtp",
+      "name": "Business Email, SMTP & Cloud Services",
+      "short": "Professional email, deliverability (SPF/DKIM/DMARC) and transactional SMTP.",
+      "headline": "Business email, SMTP and deliverability",
+      "intro": "If your invoices land in spam or your app’s password-reset emails never arrive, you are losing money and trust. We set up professional email for your organisation and reliable SMTP for your websites and apps, with the authentication that inbox providers now require.",
+      "startingAt": "Email & SMTP set-up $890 (up to 25 mailboxes)",
+      "outcomes": [
+        "Professional addresses on your own domain for every team member",
+        "SPF, DKIM and DMARC aligned, meeting Google and Microsoft sender requirements",
+        "Transactional email for your apps with delivery tracking",
+        "Mailbox migrations with no lost mail"
+      ]
+    }
+  ]
+}

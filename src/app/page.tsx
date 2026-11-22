@@ -2,12 +2,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { brand } from '@/content/brand';
+import content from '@/content/editable.json';
 import { services } from '@/content/services';
 import { industries } from '@/content/industries';
 import { locations } from '@/content/locations';
 import { plans, cad, PAYG_RATE } from '@/content/plans';
 import { ServiceCard, CtaBand, FaqList, Check } from '@/components/Bits';
 import { JsonLd } from '@/components/JsonLd';
+import { PlatformGrid } from '@/components/Platforms';
 import { faqLd, pageMeta } from '@/lib/seo';
 
 export const metadata: Metadata = pageMeta({
@@ -18,12 +20,7 @@ export const metadata: Metadata = pageMeta({
   path: '/',
 });
 
-const homeFaqs = [
-  { q: 'What does a subscription include?', a: 'A set number of hours each month for any of our services, plus monitoring, updates, backups and a monthly report. Unused hours roll over once.' },
-  { q: 'Can I hire you for one project?', a: 'Yes. Pick a fixed-price package or ask for a quote. Larger projects start with a deposit and are billed at milestones.' },
-  { q: 'Do you work outside Ontario?', a: 'Yes, with clients in every province. We work remotely and cover Atlantic to Pacific business hours.' },
-  { q: 'How do payments and taxes work?', a: 'Prices are in Canadian dollars. Pay by card through Stripe or by EFT on invoice. GST/HST or QST is added where it applies.' },
-];
+const homeFaqs = content.home.faqs;
 
 export default function Home() {
   return (
@@ -31,13 +28,13 @@ export default function Home() {
       <section className="hero">
         <div className="container hero-grid">
           <div>
-            <h1>IT support, software and cloud services for Canadian businesses</h1>
-            <p className="lead">One team for your systems, websites and applications. Work with us on a monthly plan, a fixed-price project, or by the hour.</p>
+            <h1>{content.home.heroTitle}</h1>
+            <p className="lead">{content.home.heroText}</p>
             <div className="hero-actions">
               <Link href="/pricing" className="btn btn-primary btn-lg">View pricing</Link>
               <Link href="/contact" className="btn btn-ghost btn-lg">Book a consultation</Link>
             </div>
-            <p className="hero-note">Clients across Canada · Prices in CAD · Reply within one business day</p>
+            <p className="hero-note">{content.home.heroNote}</p>
           </div>
           <div className="hero-media">
             <Image src="/images/team.webp" alt="Our team reviewing a client project" fill sizes="(max-width: 900px) 100vw, 520px" priority />
@@ -45,12 +42,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="tech-strip" aria-label="Platforms we work with">
-        <div className="container tech-strip__inner">
-          <p>We work with</p>
-          <span className="tech-list">{['AWS', 'Azure', 'Google Cloud', 'Microsoft 365', 'Shopify', 'Odoo', 'Magento', 'WordPress', 'Stripe'].join(', ')}</span>
-        </div>
-      </section>
 
       <section className="section">
         <div className="container">
@@ -64,6 +55,13 @@ export default function Home() {
       </section>
 
       <section className="section section--soft">
+        <div className="container">
+          <div className="section-head"><h2>Platforms we work with</h2></div>
+          <PlatformGrid />
+        </div>
+      </section>
+
+      <section className="section">
         <div className="container">
           <div className="section-head">
             <h2>Ways to work with us</h2>
@@ -103,7 +101,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section section--soft">
         <div className="container">
           <div className="section-head"><h2>How we start</h2></div>
           <ol className="steps">
@@ -115,7 +113,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section--soft">
+      <section className="section">
         <div className="container">
           <div className="section-head"><h2>Industries</h2></div>
           <div className="tiles">
