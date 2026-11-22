@@ -93,11 +93,23 @@ const gh = (path: string, init?: RequestInit) =>
 
 export const canSave = () => Boolean(process.env.GITHUB_TOKEN);
 
+/** Plain-English explanation of a GitHub API error, shown in the admin. */
+export class GitHubError extends Error {
+  constructor(public status: number, action: 'read' | 'save') {
+    const hints: Record<number, string> = {
+      401: 'GitHub rejected the token: it is wrong or has expired. Create a new token and update GITHUB_TOKEN in Vercel.',
+      403: 'GitHub refused permission. Edit the token: Repository access must include Vanokibs-whitelabel, and Contents must be "Read and write".',
+      404: 'GitHub could not find the repository with this token. Check GITHUB_REPO and that the token has access to Vanokibs-whitelabel.',
+    };
+    super(hints[status] || `GitHub ${action} failed (status ${status}). Please try again.`);
+  }
+}
+
 /** Latest saved content (from GitHub when configured, so edits made since the last deploy show up). */
 export async function readContent(): Promise<{ data: Content; sha: string | null }> {
   if (!canSave()) return { data: bundled, sha: null };
   const res = await gh(`${CONTENT_PATH}?ref=${encodeURIComponent(branch())}`);
-  if (!res.ok) throw new Error(`GitHub read failed (${res.status})`);
+  if (!res.ok) throw new GitHubError(res.status, 'read');
   const body = (await res.json()) as { content: string; sha: string };
   return { data: JSON.parse(Buffer.from(body.content, 'base64').toString('utf8')), sha: body.sha };
 }
@@ -112,8 +124,8 @@ export async function writeContent(data: Content, sha: string, who: string) {
       branch: branch(),
     }),
   });
-  if (res.status === 409 || res.status === 422) return { ok: false as const, conflict: true };
-  if (!res.ok) throw new Error(`GitHub write failed (${res.status})`);
+  if (res.status === 409 || (res.status === 422 && !(await res.clone().text()).includes('permission'))) return { ok: false as const, conflict: true };
+  if (!res.ok) throw new GitHubError(res.status, 'save');
   return { ok: true as const };
 }
 

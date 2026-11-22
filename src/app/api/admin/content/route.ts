@@ -1,4 +1,4 @@
-import { canSave, conform, getSession, readContent, writeContent } from '@/lib/admin';
+import { canSave, conform, getSession, GitHubError, readContent, writeContent } from '@/lib/admin';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     return Response.json({ data, sha, canSave: canSave(), user: session });
   } catch (err) {
     console.error('admin read failed', err instanceof Error ? err.message : err);
-    return Response.json({ message: 'Could not load content from GitHub. Check GITHUB_TOKEN and GITHUB_REPO.' }, { status: 502 });
+    return Response.json({ message: err instanceof GitHubError ? err.message : 'Could not load content from GitHub. Check GITHUB_TOKEN and GITHUB_REPO.' }, { status: 502 });
   }
 }
 
@@ -35,6 +35,6 @@ export async function PUT(req: Request) {
     return Response.json({ ok: true });
   } catch (err) {
     console.error('admin save failed', err instanceof Error ? err.message : err);
-    return Response.json({ message: 'Saving failed. Please try again.' }, { status: 502 });
+    return Response.json({ message: err instanceof GitHubError ? err.message : 'Saving failed. Please try again.' }, { status: 502 });
   }
 }
