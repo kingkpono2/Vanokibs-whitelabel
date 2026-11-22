@@ -6,9 +6,9 @@
 export const brand = {
   name: 'Vanokibs',
   legalName: 'Vanokibs',
-  tagline: 'Technology team on demand for Canadian businesses',
+  tagline: 'IT, software and cloud services for Canadian businesses',
   description:
-    'Vanokibs gives Canadian companies a senior technology team on subscription, by project or by the hour: IT support, custom software, DevOps and cloud, ecommerce, fintech, ERP (Odoo), Magento, WordPress, mobile apps and business email/SMTP.',
+    'IT support, software development, DevOps and cloud services for Canadian businesses, by monthly plan, project or hour.',
   siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || 'https://vanokibs.vercel.app').replace(/\/$/, ''),
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || '',

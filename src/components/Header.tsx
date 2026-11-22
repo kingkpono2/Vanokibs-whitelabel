@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { brand } from '@/content/brand';
 import { services } from '@/content/services';
 import { industries } from '@/content/industries';
-import { Icon } from './Icon';
 import { Logo } from './Logo';
 
 export function Header() {
@@ -42,7 +41,6 @@ export function Header() {
               <div className="mega-grid">
                 {services.map((s) => (
                   <Link key={s.slug} href={`/services/${s.slug}`} className="mega-link" role="menuitem">
-                    <span className="mega-icon"><Icon name={s.icon} size={20} /></span>
                     <span><strong>{s.name}</strong><small>{s.short}</small></span>
                   </Link>
                 ))}
@@ -54,7 +52,6 @@ export function Header() {
             <div className="mega mega--sm" role="menu">
               {industries.map((i) => (
                 <Link key={i.slug} href={`/industries/${i.slug}`} className="mega-link" role="menuitem">
-                  <span className="mega-icon"><Icon name={i.icon} size={20} /></span>
                   <span><strong>{i.name}</strong></span>
                 </Link>
               ))}
@@ -82,15 +79,15 @@ export function Header() {
         <div className="mobile-nav__body">
           <p className="mobile-nav__label">Services</p>
           {services.map((s) => (
-            <Link key={s.slug} href={`/services/${s.slug}`} className="mobile-link"><Icon name={s.icon} size={18} /> {s.name}</Link>
+            <Link key={s.slug} href={`/services/${s.slug}`} className="mobile-link">{s.name}</Link>
           ))}
           <p className="mobile-nav__label">Company</p>
-          <Link href="/pricing" className="mobile-link"><Icon name="chart" size={18} /> Pricing</Link>
-          <Link href="/industries" className="mobile-link"><Icon name="briefcase" size={18} /> Industries</Link>
-          <Link href="/how-it-works" className="mobile-link"><Icon name="rocket" size={18} /> How it works</Link>
-          <Link href="/insights" className="mobile-link"><Icon name="spark" size={18} /> Insights</Link>
-          <Link href="/locations" className="mobile-link"><Icon name="maple" size={18} /> Cities we serve</Link>
-          <Link href="/contact" className="btn btn-primary btn-block">Book a free consultation</Link>
+          <Link href="/pricing" className="mobile-link">Pricing</Link>
+          <Link href="/industries" className="mobile-link">Industries</Link>
+          <Link href="/how-it-works" className="mobile-link">How it works</Link>
+          <Link href="/insights" className="mobile-link">Insights</Link>
+          <Link href="/locations" className="mobile-link">Cities we serve</Link>
+          <Link href="/contact" className="btn btn-primary btn-block">Book a consultation</Link>
         </div>
       </div>
       {open && <button className="mobile-overlay" aria-label="Close menu" onClick={() => setOpen(false)} />}

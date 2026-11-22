@@ -34,7 +34,7 @@ export const services: Service[] = [
     metaTitle: 'Managed IT Support Canada | Help Desk & Security',
     metaDescription:
       'Outsourced IT support across Canada: help desk, Microsoft 365 and Google Workspace administration, device management, backups and security monitoring. Monthly plans in CAD.',
-    headline: 'IT support that answers fast and fixes the cause, not just the ticket',
+    headline: 'Managed IT support for small and mid-sized businesses',
     intro:
       'Your team should not lose an afternoon to a locked account, a failing laptop or a printer that vanished from the network. We run your help desk, manage users and devices, watch your systems and keep everything patched, so problems are solved quickly and stop coming back.',
     outcomes: [
@@ -72,7 +72,7 @@ export const services: Service[] = [
     metaTitle: 'Custom Software Development Canada',
     metaDescription:
       'Canadian custom software development: customer portals, internal tools, APIs and system integrations built with modern, maintainable code. Fixed-price projects or a monthly dev team.',
-    headline: 'Software built around your business, not the other way around',
+    headline: 'Custom web applications, portals and integrations',
     intro:
       'Spreadsheets and copy-paste between systems work until they don’t. We design and build the web apps, portals and integrations that remove that manual work: clean code, automated tests and documentation your next developer will thank you for.',
     outcomes: [
@@ -108,7 +108,7 @@ export const services: Service[] = [
     metaTitle: 'DevOps & Cloud Services Canada (AWS, Azure, GCP)',
     metaDescription:
       'DevOps consulting for Canadian companies: CI/CD pipelines, infrastructure as code, Kubernetes, monitoring, backups and cloud cost optimisation on AWS ca-central-1, Azure Canada and GCP.',
-    headline: 'Ship faster, sleep better and stop overpaying for cloud',
+    headline: 'DevOps and cloud engineering on AWS, Azure and Google Cloud',
     intro:
       'Manual deployments, surprise outages and a cloud bill nobody can explain are signs the platform has outgrown how it is run. We automate builds and releases, put everything in code, add proper monitoring and cut waste, with Canadian regions wherever your data needs to stay in the country.',
     outcomes: [
@@ -144,7 +144,7 @@ export const services: Service[] = [
     metaTitle: 'Ecommerce Development Canada | Shopify, Magento',
     metaDescription:
       'Ecommerce development for Canadian retailers and brands: Shopify, WooCommerce and Adobe Commerce (Magento) builds, migrations, Canadian payments, shipping, GST/HST/QST and ERP integration.',
-    headline: 'Online stores built for Canadian customers and Canadian taxes',
+    headline: 'Ecommerce development for Canadian retailers',
     intro:
       'Selling online in Canada means getting provincial sales tax right, shipping with Canada Post, Purolator or UPS, accepting Interac and cards, and often selling in French as well as English. We build and improve stores that handle all of it, and connect them to the inventory and accounting systems behind them.',
     outcomes: [
@@ -180,7 +180,7 @@ export const services: Service[] = [
     metaTitle: 'Fintech Software Development Canada',
     metaDescription:
       'Fintech development in Canada: payment flows, lending and onboarding platforms, wallets, ledgers and banking integrations, built with security, audit trails and FINTRAC/PIPEDA requirements in mind.',
-    headline: 'Financial software that is fast to market and ready for an audit',
+    headline: 'Software development for fintech and financial services',
     intro:
       'In fintech, the product is only as good as the trust behind it. We build payment flows, onboarding and lending platforms, ledgers and dashboards with the controls regulators and partners expect: strong authentication, complete audit trails, encryption and clear separation of duties.',
     outcomes: [
@@ -216,7 +216,7 @@ export const services: Service[] = [
     metaTitle: 'ERP Implementation & Integration Canada',
     metaDescription:
       'ERP consulting for Canadian SMBs: requirements, selection, Odoo implementation, data migration, integrations with ecommerce and accounting, and training. Fixed-price phases.',
-    headline: 'One system for stock, sales, purchasing and accounting',
+    headline: 'ERP selection, implementation and integration',
     intro:
       'When inventory lives in one spreadsheet, orders in another and accounting in a third, nobody trusts the numbers. We help you choose the right ERP, implement it in phases, migrate your data and connect it to your store and your accountant, so everyone works from the same truth.',
     outcomes: [
@@ -251,7 +251,7 @@ export const services: Service[] = [
     metaTitle: 'Odoo Implementation & Support Canada',
     metaDescription:
       'Odoo implementation and development in Canada: Community and Enterprise, Canadian accounting localisation, custom modules, version upgrades, integrations and ongoing support.',
-    headline: 'Odoo, configured for Canadian businesses and extended when you need it',
+    headline: 'Odoo implementation, development and support',
     intro:
       'Odoo can run sales, inventory, manufacturing, accounting, HR and your website from one platform at a fraction of the cost of traditional ERPs. We implement it properly: the Canadian localisation, the right apps for your processes and custom modules only where the standard ones don’t fit.',
     outcomes: [
@@ -286,7 +286,7 @@ export const services: Service[] = [
     metaTitle: 'Magento & Adobe Commerce Development Canada',
     metaDescription:
       'Magento 2 and Adobe Commerce development in Canada: version upgrades, security patches, performance tuning, extensions, B2B features and migrations from Magento 1 or to Shopify.',
-    headline: 'Keep your Magento store fast, secure and up to date',
+    headline: 'Magento and Adobe Commerce development and support',
     intro:
       'Magento is powerful for large catalogues and B2B selling, but only when it is kept patched, upgraded and tuned. We take care of the platform (security patches, upgrades, extensions and performance) and build the custom features your buyers need.',
     outcomes: [
@@ -321,7 +321,7 @@ export const services: Service[] = [
     metaTitle: 'WordPress Development & Maintenance Canada',
     metaDescription:
       'WordPress design, development and maintenance for Canadian businesses: custom themes, WooCommerce, speed optimisation, security hardening, backups, hosting and accessibility (AODA/WCAG).',
-    headline: 'A WordPress site that is fast, secure and easy for your team to update',
+    headline: 'WordPress development, hosting and maintenance',
     intro:
       'Most WordPress problems come from too many plugins, no updates and no backups. We build lean, custom sites your team can edit easily, then keep them updated, backed up, monitored and fast, so your website keeps working while you get on with business.',
     outcomes: [
@@ -356,7 +356,7 @@ export const services: Service[] = [
     metaTitle: 'Mobile App Development Canada | iOS & Android',
     metaDescription:
       'Mobile app development for Canadian businesses: iOS and Android apps with React Native or Flutter, backend APIs, App Store and Google Play publishing, and ongoing maintenance.',
-    headline: 'iOS and Android apps your customers keep using',
+    headline: 'iOS and Android app development',
     intro:
       'A good app is more than screens: it needs a reliable backend, push notifications, analytics, store listings and regular updates for new OS versions. We take apps from idea to App Store and Google Play, and keep them healthy afterwards.',
     outcomes: [
@@ -391,7 +391,7 @@ export const services: Service[] = [
     metaTitle: 'Business Email & SMTP Services Canada',
     metaDescription:
       'Business email and SMTP for Canadian organisations: Microsoft 365 and Google Workspace set-up, mailbox migration, SPF, DKIM and DMARC, transactional SMTP for apps, and CASL-friendly sending.',
-    headline: 'Email that arrives in the inbox, every time',
+    headline: 'Business email, SMTP and deliverability',
     intro:
       'If your invoices land in spam or your app’s password-reset emails never arrive, you are losing money and trust. We set up professional email for your organisation and reliable SMTP for your websites and apps, with the authentication that inbox providers now require.',
     outcomes: [

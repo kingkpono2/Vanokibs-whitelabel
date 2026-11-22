@@ -22,7 +22,7 @@ export const industries: Industry[] = [
     metaTitle: 'Ecommerce & Retail Technology Partner, Canada',
     metaDescription:
       'Ecommerce technology for Canadian retailers: Shopify, WooCommerce and Magento stores, ERP and inventory sync, Canadian taxes and shipping, and support plans that keep stores fast during peak season.',
-    headline: 'Sell more online without your systems holding you back',
+    headline: 'Technology for ecommerce and retail',
     intro:
       'Canadian retailers juggle provincial taxes, bilingual customers, cross-border shipping and peak seasons like Black Friday and Boxing Day. We build and run the store, the integrations and the infrastructure behind it.',
     challenges: [
@@ -41,7 +41,7 @@ export const industries: Industry[] = [
     metaTitle: 'Fintech & Financial Services Technology',
     metaDescription:
       'Secure software engineering, DevOps and cloud for Canadian fintechs, lenders, credit unions and payment companies: audit trails, encryption, Canadian data residency and SOC 2 evidence.',
-    headline: 'Move fast in a regulated industry, safely',
+    headline: 'Technology for fintech and financial services',
     intro:
       'Banks, partners and auditors expect evidence: who changed what, when, and why. We build fintech products and platforms with those controls in place from the first commit.',
     challenges: [
@@ -60,7 +60,7 @@ export const industries: Industry[] = [
     metaTitle: 'ERP & Software for Manufacturers in Canada',
     metaDescription:
       'ERP implementation (Odoo), inventory and warehouse systems, EDI and B2B ordering portals for Canadian manufacturers, wholesalers and distributors.',
-    headline: 'From the purchase order to the shipped pallet, in one system',
+    headline: 'ERP and software for manufacturers and distributors',
     intro:
       'Manufacturers and distributors run on accurate stock, reliable purchasing and on-time delivery. We implement ERP, connect it to your customers and suppliers, and give your team tools that work on the warehouse floor.',
     challenges: [
@@ -79,7 +79,7 @@ export const industries: Industry[] = [
     metaTitle: 'IT & Software for Professional Services Firms',
     metaDescription:
       'Managed IT, secure email, client portals and workflow automation for Canadian accounting, legal, consulting and engineering firms.',
-    headline: 'Secure, reliable technology for firms that bill by the hour',
+    headline: 'IT and software for professional services firms',
     intro:
       'Accounting, legal, consulting and engineering firms handle confidential client data every day. We keep your team productive and your data protected, and automate the admin that eats into billable time.',
     challenges: [

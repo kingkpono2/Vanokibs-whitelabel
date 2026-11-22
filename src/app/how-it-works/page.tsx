@@ -20,7 +20,7 @@ const phases = [
 export default function HowItWorks() {
   return (
     <>
-      <PageHero eyebrow="How it works" title="A senior team without the hiring" text="Most businesses don’t need a full-time CTO, DevOps engineer, developer and IT administrator. They need access to all of them, at the right moment. That is what we provide." crumbs={[{ name: 'Home', path: '/' }, { name: 'How it works', path: '/how-it-works' }]} />
+      <PageHero eyebrow="How it works" title="How we work" text="Most businesses don’t need a full-time CTO, DevOps engineer, developer and IT administrator. They need access to all of them, at the right moment. That is what we provide." crumbs={[{ name: 'Home', path: '/' }, { name: 'How it works', path: '/how-it-works' }]} />
       <section className="section">
         <div className="container"><ol className="steps">{phases.map((p) => <li key={p.t}><h3>{p.t}</h3><p>{p.d}</p></li>)}</ol></div>
       </section>

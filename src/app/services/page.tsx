@@ -12,7 +12,7 @@ export const metadata: Metadata = pageMeta({
 export default function ServicesPage() {
   return (
     <>
-      <PageHero eyebrow="Services" title="One team for every layer of your technology" text="Pick a single service or combine several under one subscription. Every engagement is led by a senior solutions architect." crumbs={[{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }]} />
+      <PageHero eyebrow="Services" title="Services" text="Choose one service or combine several under a monthly plan." crumbs={[{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }]} />
       <section className="section">
         <div className="container svc-grid">
           {services.map((s) => <ServiceCard key={s.slug} s={s} />)}

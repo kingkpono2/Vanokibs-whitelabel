@@ -6,7 +6,6 @@ import { Breadcrumbs, CtaBand, FaqList, PageHero } from '@/components/Bits';
 import { PricingTable } from '@/components/PricingTable';
 import { CheckoutButton } from '@/components/CheckoutButton';
 import { JsonLd } from '@/components/JsonLd';
-import { Icon } from '@/components/Icon';
 import { faqLd, pageMeta } from '@/lib/seo';
 import { absoluteUrl, brand } from '@/content/brand';
 
@@ -33,7 +32,7 @@ export default function PricingPage() {
   ];
   return (
     <>
-      <PageHero eyebrow="Pricing" title="Simple, transparent pricing in Canadian dollars" text="Subscribe for a dedicated team, pay once for a defined project, or buy hours as you need them. Switch at any time." crumbs={[{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }]} />
+      <PageHero eyebrow="Pricing" title="Pricing" text="Monthly plans, fixed-price projects and hourly work. All prices in Canadian dollars." crumbs={[{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }]} />
 
       <section className="section" id="subscriptions">
         <div className="container">
@@ -87,7 +86,7 @@ export default function PricingPage() {
                   <p className="muted">{p.blurb}</p>
                   <p className="pkg__price">{cad(p.price)}</p>
                   <p className="pkg__note">{p.deposit ? `${cad(p.deposit)} deposit to start · ` : 'Paid in full · '}{p.timeline}</p>
-                  <ul>{p.includes.map((x) => <li key={x}><Icon name="check" size={16} /> {x}</li>)}</ul>
+                  <ul>{p.includes.map((x) => <li key={x}>{x}</li>)}</ul>
                   <CheckoutButton kind="package" id={p.id} label={p.deposit ? 'Pay deposit & book' : 'Buy now'} className="btn btn-dark btn-block" />
                   {svc && <Link href={`/services/${svc.slug}`} className="muted" style={{ fontSize: 14, marginTop: 12, textAlign: 'center' }}>About {svc.name}</Link>}
                 </article>

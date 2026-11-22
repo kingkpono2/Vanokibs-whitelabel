@@ -31,7 +31,7 @@ export default async function LocationPage({ params }: Props) {
   return (
     <>
       <PageHero eyebrow={`${l.city}, ${l.province}`} title={`Technology team on demand for ${l.city} businesses`} text={l.intro} image={l.image} crumbs={[{ name: 'Home', path: '/' }, { name: 'Locations', path: '/locations' }, { name: l.city, path: `/locations/${l.slug}` }]}>
-        <div className="page-hero__actions"><Link href="/contact" className="btn btn-primary btn-lg">Book a free consultation</Link><Link href="/pricing" className="btn btn-ghost btn-lg">Pricing</Link></div>
+        <div className="page-hero__actions"><Link href="/contact" className="btn btn-primary btn-lg">Book a consultation</Link><Link href="/pricing" className="btn btn-ghost btn-lg">Pricing</Link></div>
       </PageHero>
       <section className="section">
         <div className="container two-col">

@@ -2,7 +2,6 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { locations } from '@/content/locations';
 import { Breadcrumbs, CtaBand, PageHero } from '@/components/Bits';
-import { Icon } from '@/components/Icon';
 import { pageMeta } from '@/lib/seo';
 
 export const metadata: Metadata = pageMeta({
@@ -19,10 +18,10 @@ export default function LocationsPage() {
         <div className="container svc-grid">
           {locations.map((l) => (
             <Link key={l.slug} href={`/locations/${l.slug}`} className="svc-card">
-              <span className="svc-card__icon"><Icon name="maple" /></span>
+              
               <h3>{l.city}, {l.provinceCode}</h3>
               <p>{l.intro.split('. ')[0]}.</p>
-              <span className="svc-card__more">{l.timezone} support <Icon name="arrow" size={16} /></span>
+              <span className="svc-card__more">{l.timezone}</span>
             </Link>
           ))}
         </div>

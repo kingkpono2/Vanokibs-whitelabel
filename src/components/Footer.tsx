@@ -4,7 +4,6 @@ import { services } from '@/content/services';
 import { industries } from '@/content/industries';
 import { locations } from '@/content/locations';
 import { Logo } from './Logo';
-import { Icon } from './Icon';
 
 export function Footer() {
   return (
@@ -13,9 +12,9 @@ export function Footer() {
         <div className="footer-brand">
           <Logo light />
           <p>{brand.description}</p>
-          <p className="footer-maple"><Icon name="maple" size={16} /> Serving businesses across Canada · Prices in CAD</p>
-          {brand.email && <a href={`mailto:${brand.email}`} className="footer-contact"><Icon name="mail" size={16} /> {brand.email}</a>}
-          {brand.phone && <a href={`tel:${brand.phone.replace(/[^+\d]/g, '')}`} className="footer-contact"><Icon name="support" size={16} /> {brand.phone}</a>}
+          <p className="footer-maple">Serving businesses across Canada · Prices in CAD</p>
+          {brand.email && <a href={`mailto:${brand.email}`} className="footer-contact">{brand.email}</a>}
+          {brand.phone && <a href={`tel:${brand.phone.replace(/[^+\d]/g, '')}`} className="footer-contact">{brand.phone}</a>}
         </div>
         <nav aria-label="Services">
           <h2>Services</h2>
@@ -43,7 +42,7 @@ export function Footer() {
       </div>
       <div className="container footer-bottom">
         <p>© {new Date().getFullYear()} {brand.legalName}. All prices in Canadian dollars, before applicable taxes.</p>
-        <p className="footer-pay"><Icon name="lock" size={14} /> Secure payments by Stripe</p>
+        <p className="footer-pay">Payments by Stripe</p>
       </div>
     </footer>
   );

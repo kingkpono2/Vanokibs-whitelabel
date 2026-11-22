@@ -3,7 +3,6 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { industries } from '@/content/industries';
 import { Breadcrumbs, CtaBand, PageHero } from '@/components/Bits';
-import { Icon } from '@/components/Icon';
 import { pageMeta } from '@/lib/seo';
 
 export const metadata: Metadata = pageMeta({
@@ -21,7 +20,7 @@ export default function IndustriesPage() {
           {industries.map((i) => (
             <Link key={i.slug} href={`/industries/${i.slug}`} className="tile">
               <Image src={i.image} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 300px" />
-              <span className="tile__body"><h3>{i.name}</h3><span>{i.headline} <Icon name="arrow" size={14} /></span></span>
+              <span className="tile__body"><h3>{i.name}</h3><span>{i.headline}</span></span>
             </Link>
           ))}
         </div>

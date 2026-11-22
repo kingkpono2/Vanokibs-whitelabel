@@ -30,12 +30,12 @@ export function PricingTable() {
                 {billing === 'annual' ? `${cad(annualPrice(p))} billed yearly` : 'Billed monthly · cancel with 30 days’ notice'}
               </p>
               <ul className="plan__meta">
-                <li><Icon name="clock" size={16} /> {p.hours} hours included / month</li>
-                <li><Icon name="bolt" size={16} /> Response: {p.response}</li>
+                <li>{p.hours} hours included / month</li>
+                <li>Response: {p.response}</li>
               </ul>
               <CheckoutButton kind="plan" id={p.id} billing={billing} label={`Subscribe to ${p.name}`} className={`btn ${p.popular ? 'btn-primary' : 'btn-dark'} btn-block`} />
               <ul className="plan__features">
-                {p.features.map((f) => <li key={f}><Icon name="check" size={16} /> {f}</li>)}
+                {p.features.map((f) => <li key={f}>{f}</li>)}
               </ul>
             </article>
           );
