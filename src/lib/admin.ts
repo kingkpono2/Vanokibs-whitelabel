@@ -122,6 +122,7 @@ function decryptStore(text: string, key: Buffer): Store | null {
 }
 
 let cache: { at: number; value: { store: Store | null; sha: string | null } } | null = null;
+let lastStoreRead = 0;
 
 /** Latest store from GitHub (cached 10 s), so password changes apply without a redeploy. */
 export async function readStore(fresh = false): Promise<{ store: Store | null; sha: string | null }> {
@@ -131,12 +132,14 @@ export async function readStore(fresh = false): Promise<{ store: Store | null; s
   if (key && canSave()) {
     try {
       const res = await gh(`${STORE_PATH}?ref=${encodeURIComponent(branch())}`);
+      lastStoreRead = res.status;
       if (res.ok) {
         const body = (await res.json()) as { content: string; sha: string };
         value = { store: decryptStore(Buffer.from(body.content, 'base64').toString('utf8'), key), sha: body.sha };
       }
-    } catch {
-      /* fall back to environment users */
+    } catch (err) {
+      lastStoreRead = -1;
+      console.error('admin store read failed', err instanceof Error ? err.message : err);
     }
   }
   cache = { at: Date.now(), value };
@@ -160,7 +163,7 @@ export async function storeStatus() {
   let envUsersValid = false;
   try { envUsersValid = Array.isArray(JSON.parse(process.env.ADMIN_USERS || 'x')); } catch { /* invalid */ }
   const { store, sha } = await readStore(true);
-  return { keySource: source, envUsersValid, githubAccess: canSave(), storeFile: sha ? (store ? 'readable' : 'unreadable') : 'missing', storeUsers: store?.users?.length || 0 };
+  return { keySource: source, envUsersValid, githubAccess: canSave(), storeFile: sha ? (store ? 'readable' : 'unreadable') : 'missing', storeUsers: store?.users?.length || 0, githubStatus: lastStoreRead, repo: repo(), branch: branch() };
 }
 
 /** Current store, created from the environment users the first time it is needed. */
