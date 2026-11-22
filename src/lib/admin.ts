@@ -154,6 +154,15 @@ export async function writeStore(store: Store, sha: string | null, message: stri
   cache = null;
 }
 
+/** Coarse set-up status for troubleshooting: never returns secrets or user details. */
+export async function storeStatus() {
+  const source = process.env.ADMIN_SECRET ? 'ADMIN_SECRET' : process.env.ADMIN_USERS ? 'ADMIN_USERS' : 'none';
+  let envUsersValid = false;
+  try { envUsersValid = Array.isArray(JSON.parse(process.env.ADMIN_USERS || 'x')); } catch { /* invalid */ }
+  const { store, sha } = await readStore(true);
+  return { keySource: source, envUsersValid, githubAccess: canSave(), storeFile: sha ? (store ? 'readable' : 'unreadable') : 'missing', storeUsers: store?.users?.length || 0 };
+}
+
 /** Current store, created from the environment users the first time it is needed. */
 async function editableStore() {
   const { store, sha } = await readStore(true);
