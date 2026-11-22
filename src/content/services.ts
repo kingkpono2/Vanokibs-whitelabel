@@ -102,6 +102,42 @@ const baseServices: Service[] = [
     related: ['devops-cloud', 'mobile-app-development', 'fintech-development'],
   },
   {
+    slug: 'qa-software-testing',
+    name: 'QA & Software Testing',
+    short: 'Manual and automated testing for web, mobile and APIs, built into your release process.',
+    icon: 'check',
+    image: '/images/code.webp',
+    metaTitle: 'QA & Software Testing Services Canada | Test Automation',
+    metaDescription:
+      'Software testing for Canadian businesses: manual QA, test automation with Playwright and Cypress, mobile app testing, API, performance and accessibility (WCAG/AODA) testing, integrated with CI/CD.',
+    headline: 'QA and software testing for web, mobile and APIs',
+    intro:
+      'Bugs found by customers cost far more than bugs found in testing. We test your website, app or API before every release, automate the tests that matter most and run them on every change, so you can ship with confidence.',
+    outcomes: [
+      'Clear test plans and a regression checklist for every release',
+      'Automated tests running in your CI/CD pipeline on every change',
+      'Bugs reported with steps, screenshots and severity, ready to fix',
+      'Accessibility and performance checked before launch',
+    ],
+    deliverables: [
+      { title: 'Manual testing', text: 'Exploratory and scripted testing across browsers and devices, including user acceptance testing support.' },
+      { title: 'Test automation', text: 'End-to-end tests with Playwright, Cypress or Selenium, written to be stable and easy to maintain.' },
+      { title: 'Mobile app testing', text: 'iOS and Android testing on real devices and emulators, with Appium or Detox automation.' },
+      { title: 'API testing', text: 'Contract and functional tests for REST and GraphQL APIs with Postman or code-based suites.' },
+      { title: 'Performance & load', text: 'Load and stress tests with k6 or JMeter to find limits before your customers do.' },
+      { title: 'Accessibility testing', text: 'WCAG 2.1 AA checks with automated tools and manual screen-reader testing, supporting AODA.' },
+    ],
+    stack: ['Playwright', 'Cypress', 'Selenium', 'Appium', 'Postman', 'k6', 'JMeter', 'axe', 'BrowserStack', 'GitHub Actions'],
+    bestFor: 'Teams releasing websites, apps or APIs regularly, and anyone preparing for a major launch.',
+    startingAt: 'QA audit and test plan from $1,900; ongoing testing through a monthly plan',
+    faqs: [
+      { q: 'Can you test software another company built?', a: 'Yes. We test what you have, report issues to your developers in a clear format, and can retest fixes.' },
+      { q: 'Manual or automated testing?', a: 'Both. We automate stable, repeated checks (log-in, checkout, key forms) and keep manual testing for new features and usability.' },
+      { q: 'Do the tests run automatically?', a: 'Yes. Automated tests run in your CI/CD pipeline, such as GitHub Actions, on every change, and failures block the release.' },
+    ],
+    related: ['custom-software-development', 'mobile-app-development', 'devops-cloud'],
+  },
+  {
     slug: 'devops-cloud',
     name: 'DevOps & Cloud Engineering',
     short: 'CI/CD, infrastructure as code, monitoring and cost control on AWS, Azure and GCP.',

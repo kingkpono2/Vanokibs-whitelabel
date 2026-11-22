@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { services } from '@/content/services';
 
 type Status = { state: 'idle' | 'sending' | 'sent' | 'error'; message?: string };
 
-export function QuoteForm({ preselect = '', itemLabel = '' }: { preselect?: string; itemLabel?: string }) {
+export function QuoteForm({ preselect = '', itemLabel = '', services }: { preselect?: string; itemLabel?: string; services: { slug: string; name: string }[] }) {
   const [status, setStatus] = useState<Status>({ state: 'idle' });
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {

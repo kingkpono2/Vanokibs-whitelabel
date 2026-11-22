@@ -3,12 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { brand } from '@/content/brand';
-import { services } from '@/content/services';
-import { industries } from '@/content/industries';
 import { Logo } from './Logo';
 
-export function Header() {
+export type NavData = {
+  brandName: string;
+  plansLabel: string;
+  services: { slug: string; name: string; short: string }[];
+  industries: { slug: string; name: string }[];
+};
+
+export function Header({ brandName, plansLabel, services, industries }: NavData) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -30,8 +34,8 @@ export function Header() {
   return (
     <header className={`site-header${scrolled ? ' is-scrolled' : ''}`}>
       <div className="container header-row">
-        <Link href="/" className="brand" aria-label={`${brand.name} home`}>
-          <Logo />
+        <Link href="/" className="brand" aria-label={`${brandName} home`}>
+          <Logo name={brandName} />
         </Link>
 
         <nav className="nav" aria-label="Main">
@@ -57,7 +61,7 @@ export function Header() {
               ))}
             </div>
           </div>
-          <Link href="/pricing" className="nav-link">Pricing</Link>
+          <Link href="/pricing" className="nav-link">{plansLabel}</Link>
           <Link href="/how-it-works" className="nav-link">How it works</Link>
           <Link href="/insights" className="nav-link">Insights</Link>
         </nav>
@@ -73,7 +77,7 @@ export function Header() {
 
       <div className={`mobile-nav${open ? ' is-open' : ''}`} id="mobile-nav" aria-hidden={!open}>
         <div className="mobile-nav__head">
-          <Logo />
+          <Logo name={brandName} />
           <button className="close-btn" aria-label="Close menu" onClick={() => setOpen(false)}>×</button>
         </div>
         <div className="mobile-nav__body">
@@ -82,7 +86,7 @@ export function Header() {
             <Link key={s.slug} href={`/services/${s.slug}`} className="mobile-link">{s.name}</Link>
           ))}
           <p className="mobile-nav__label">Company</p>
-          <Link href="/pricing" className="mobile-link">Pricing</Link>
+          <Link href="/pricing" className="mobile-link">{plansLabel}</Link>
           <Link href="/industries" className="mobile-link">Industries</Link>
           <Link href="/how-it-works" className="mobile-link">How it works</Link>
           <Link href="/insights" className="mobile-link">Insights</Link>

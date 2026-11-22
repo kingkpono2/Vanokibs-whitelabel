@@ -6,7 +6,7 @@ import content from '@/content/editable.json';
 import { services } from '@/content/services';
 import { industries } from '@/content/industries';
 import { locations } from '@/content/locations';
-import { plans, cad, PAYG_RATE } from '@/content/plans';
+import { plans, cad, PAYG_RATE, SHOW_PRICES } from '@/content/plans';
 import { ServiceCard, CtaBand, FaqList, Check } from '@/components/Bits';
 import { JsonLd } from '@/components/JsonLd';
 import { PlatformGrid } from '@/components/Platforms';
@@ -31,7 +31,7 @@ export default function Home() {
             <h1>{content.home.heroTitle}</h1>
             <p className="lead">{content.home.heroText}</p>
             <div className="hero-actions">
-              <Link href="/pricing" className="btn btn-primary btn-lg">View pricing</Link>
+              <Link href="/pricing" className="btn btn-primary btn-lg">{SHOW_PRICES ? 'View pricing' : 'View plans'}</Link>
               <Link href="/contact" className="btn btn-ghost btn-lg">Book a consultation</Link>
             </div>
             <p className="hero-note">{content.home.heroNote}</p>
@@ -69,7 +69,7 @@ export default function Home() {
           <div className="models">
             <article className="model">
               <h3>Monthly plan</h3>
-              <p className="model__price">From {cad(plans[0].monthly)}<small> / month</small></p>
+              {SHOW_PRICES && <p className="model__price">From {cad(plans[0].monthly)}<small> / month</small></p>}
               <ul>
                 <Check>Hours each month for any service</Check>
                 <Check>Monitoring, updates and backups</Check>
@@ -79,7 +79,7 @@ export default function Home() {
             </article>
             <article className="model">
               <h3>Fixed-price project</h3>
-              <p className="model__price">From {cad(890)}</p>
+              {SHOW_PRICES && <p className="model__price">From {cad(890)}</p>}
               <ul>
                 <Check>Scope and price agreed first</Check>
                 <Check>Milestone billing on larger work</Check>
@@ -89,10 +89,10 @@ export default function Home() {
             </article>
             <article className="model">
               <h3>Hourly, as needed</h3>
-              <p className="model__price">{cad(PAYG_RATE)}<small> / hour</small></p>
+              {SHOW_PRICES && <p className="model__price">{cad(PAYG_RATE)}<small> / hour</small></p>}
               <ul>
                 <Check>No commitment</Check>
-                <Check>Prepaid blocks from {cad(120)}/hour</Check>
+                <Check>{SHOW_PRICES ? `Prepaid blocks from ${cad(120)}/hour` : 'Prepaid hour blocks available'}</Check>
                 <Check>Billed in 15-minute increments</Check>
               </ul>
               <Link href="/pricing#on-demand" className="btn btn-ghost btn-block">Buy hours</Link>

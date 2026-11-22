@@ -1,6 +1,7 @@
 {
   "brand": {
     "name": "Vanokibs",
+    "legalName": "Vanokibs",
     "tagline": "IT, software and cloud services for Canadian businesses",
     "description": "IT support, software development, DevOps and cloud services for Canadian businesses, by monthly plan, project or hour.",
     "email": "",
@@ -10,7 +11,7 @@
   "home": {
     "heroTitle": "IT support, software and cloud services for Canadian businesses",
     "heroText": "One team for your systems, websites and applications. Work with us on a monthly plan, a fixed-price project, or by the hour.",
-    "heroNote": "Clients across Canada · Prices in CAD · Reply within one business day",
+    "heroNote": "Clients across Canada · Reply within one business day",
     "faqs": [
       {
         "q": "What does a subscription include?",
@@ -31,6 +32,7 @@
     ]
   },
   "pricing": {
+    "showPrices": false,
     "annualMonthsCharged": 10,
     "payAsYouGoRate": 145,
     "emergencyRate": 195,
@@ -260,6 +262,20 @@
         "Working software every two weeks, deployed to a test environment you can use",
         "Automated tests and CI/CD from day one",
         "Source code, documentation and accounts that belong to you"
+      ]
+    },
+    {
+      "slug": "qa-software-testing",
+      "name": "QA & Software Testing",
+      "short": "Manual and automated testing for web, mobile and APIs, built into your release process.",
+      "headline": "QA and software testing for web, mobile and APIs",
+      "intro": "Bugs found by customers cost far more than bugs found in testing. We test your website, app or API before every release, automate the tests that matter most and run them on every change, so you can ship with confidence.",
+      "startingAt": "QA audit and test plan from $1,900; ongoing testing through a monthly plan",
+      "outcomes": [
+        "Clear test plans and a regression checklist for every release",
+        "Automated tests running in your CI/CD pipeline on every change",
+        "Bugs reported with steps, screenshots and severity, ready to fix",
+        "Accessibility and performance checked before launch"
       ]
     },
     {

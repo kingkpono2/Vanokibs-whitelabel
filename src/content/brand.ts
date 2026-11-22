@@ -9,7 +9,7 @@ const b = content.brand;
 
 export const brand = {
   name: b.name,
-  legalName: b.name,
+  legalName: b.legalName || b.name, // the company that operates the site
   tagline: b.tagline,
   description: b.description,
   // Your domain if set; otherwise Vercel's production address (provided automatically at build time).

@@ -15,7 +15,7 @@ Services covered: managed IT & tech support, custom software, DevOps & cloud, AW
 | Brand name, contact details (white-label) | `src/content/brand.ts` + environment variables |
 | Editable content: company details, homepage text, prices, service text | `src/content/editable.json` (edited through `/admin`) |
 | Price types and checkout helpers | `src/content/plans.ts` |
-| Service pages (12) | `src/content/services.ts` |
+| Service pages (13) | `src/content/services.ts` |
 | Industry pages (4) | `src/content/industries.ts` |
 | City pages (8) | `src/content/locations.ts` |
 | Insights articles (4) | `src/content/posts.ts` |

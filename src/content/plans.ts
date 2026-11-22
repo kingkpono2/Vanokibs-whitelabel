@@ -31,6 +31,9 @@ export type HourBlock = { id: string; hours: number; price: number; validity: st
 
 const pricing = content.pricing;
 
+/** When false, the site hides every amount and buy buttons become quote requests (admin: Prices → Show prices). */
+export const SHOW_PRICES = pricing.showPrices;
+
 export const ANNUAL_MONTHS_CHARGED = pricing.annualMonthsCharged; // annual billing: 12 months for the price of this many
 
 export const plans: Plan[] = pricing.plans.map((p) => ({ ...p, popular: p.popular || undefined }));

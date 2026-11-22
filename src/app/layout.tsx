@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Source_Serif_4 } from 'next/font/google';
 import { brand } from '@/content/brand';
 import { Header } from '@/components/Header';
+import { services } from '@/content/services';
+import { industries } from '@/content/industries';
+import { SHOW_PRICES } from '@/content/plans';
 import { Footer } from '@/components/Footer';
 import { JsonLd } from '@/components/JsonLd';
 import { organizationLd, websiteLd } from '@/lib/seo';
@@ -44,7 +47,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-CA" className={`${inter.variable} ${serif.variable}`}>
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
-        <Header />
+        <Header
+          brandName={brand.name}
+          plansLabel={SHOW_PRICES ? 'Pricing' : 'Plans'}
+          services={services.map(({ slug, name, short }) => ({ slug, name, short }))}
+          industries={industries.map(({ slug, name }) => ({ slug, name }))}
+        />
         <main id="main">{children}</main>
         <Footer />
         <JsonLd data={[organizationLd(), websiteLd()]} />

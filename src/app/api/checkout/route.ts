@@ -1,12 +1,13 @@
 import Stripe from 'stripe';
 import { resolveItem } from '@/lib/catalog';
 import { brand } from '@/content/brand';
+import { SHOW_PRICES } from '@/content/plans';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) {
+  if (!key || !SHOW_PRICES) {
     // Not configured yet: the button falls back to the quote form.
     return Response.json({ fallback: true, message: 'Online checkout is not enabled yet.' }, { status: 503 });
   }

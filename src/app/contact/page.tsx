@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { brand } from '@/content/brand';
 import { services } from '@/content/services';
 import { itemFromKey } from '@/lib/catalog';
-import { cad } from '@/content/plans';
+import { cad, SHOW_PRICES } from '@/content/plans';
 import { Breadcrumbs, PageHero } from '@/components/Bits';
 import { QuoteForm } from '@/components/QuoteForm';
 import { pageMeta } from '@/lib/seo';
@@ -19,13 +19,13 @@ export default async function ContactPage({ searchParams }: Props) {
   const sp = await searchParams;
   const item = sp.item ? itemFromKey(sp.item) : null;
   const preselect = services.some((s) => s.slug === sp.service) ? sp.service! : '';
-  const itemLabel = item ? `${item.name} (${cad(item.amount)}${item.recurring ? `/${item.recurring}` : ''})` : '';
+  const itemLabel = item ? (SHOW_PRICES ? `${item.name} (${cad(item.amount)}${item.recurring ? `/${item.recurring}` : ''})` : item.name.replace(/: project deposit$/, '')) : '';
   return (
     <>
       <PageHero eyebrow="Contact" title="Contact us" text="Tell us about your project. We reply within one business day." crumbs={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]} />
       <section className="section">
         <div className="container contact-grid">
-          <QuoteForm preselect={preselect} itemLabel={itemLabel} />
+          <QuoteForm preselect={preselect} itemLabel={itemLabel} services={services.map(({ slug, name }) => ({ slug, name }))} />
           <div className="contact-side">
             <div className="value"><h3>Free 30-minute consultation</h3><p>Practical advice from a senior architect, with no obligation.</p></div>
             <div className="value"><h3>Reply within 1 business day</h3><p>{brand.hours}.</p></div>

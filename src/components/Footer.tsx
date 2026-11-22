@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { brand } from '@/content/brand';
+import { SHOW_PRICES } from '@/content/plans';
 import { services } from '@/content/services';
 import { industries } from '@/content/industries';
 import { locations } from '@/content/locations';
@@ -10,9 +11,9 @@ export function Footer() {
     <footer className="site-footer">
       <div className="container footer-grid">
         <div className="footer-brand">
-          <Logo light />
+          <Logo name={brand.name} light />
           <p>{brand.description}</p>
-          <p className="footer-maple">Serving businesses across Canada · Prices in CAD</p>
+          <p className="footer-maple">Serving businesses across Canada</p>
           {brand.email && <a href={`mailto:${brand.email}`} className="footer-contact">{brand.email}</a>}
           {brand.phone && <a href={`tel:${brand.phone.replace(/[^+\d]/g, '')}`} className="footer-contact">{brand.phone}</a>}
         </div>
@@ -29,7 +30,7 @@ export function Footer() {
         <nav aria-label="Company">
           <h2>Company</h2>
           <ul>
-            <li><Link href="/pricing">Pricing & plans</Link></li>
+            <li><Link href="/pricing">{SHOW_PRICES ? 'Pricing & plans' : 'Plans'}</Link></li>
             <li><Link href="/how-it-works">How it works</Link></li>
             <li><Link href="/insights">Insights</Link></li>
             <li><Link href="/faq">FAQ</Link></li>
@@ -41,8 +42,7 @@ export function Footer() {
         </nav>
       </div>
       <div className="container footer-bottom">
-        <p>© {new Date().getFullYear()} {brand.legalName}. All prices in Canadian dollars, before applicable taxes.</p>
-        <p className="footer-pay">Payments by Stripe</p>
+        <p>© {new Date().getFullYear()} {brand.name}{brand.legalName !== brand.name ? `, a service of ${brand.legalName}` : ''}.{SHOW_PRICES ? ' All prices in Canadian dollars, before applicable taxes.' : ''}</p>
       </div>
     </footer>
   );

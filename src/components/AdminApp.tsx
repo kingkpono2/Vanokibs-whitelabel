@@ -14,9 +14,12 @@ const LABELS: Record<string, string> = {
   monthly: 'Price per month ($)', hours: 'Hours', response: 'Response time', popular: 'Show as most popular', features: 'Features (one per line)',
   price: 'Price ($)', deposit: 'Deposit to start ($, 0 = pay in full)', includes: 'Included (one per line)', timeline: 'Timeline', hourBlocks: 'Prepaid hour blocks',
   validity: 'Valid for', short: 'Short summary', headline: 'Page heading', intro: 'Intro text', startingAt: 'Price note', outcomes: 'Outcomes (one per line)',
+  showPrices: 'Show prices on the website (off = all prices hidden; pricing by consultation)',
   tagline: 'Tagline', description: 'Description', email: 'Contact email', phone: 'Contact phone',
 };
-const label = (k: string) => LABELS[k] || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase();
+const BRAND_LABELS: Record<string, string> = { name: 'Website / brand name (logo, titles)', legalName: 'Company name (legal operator)' };
+let labelOverrides: Record<string, string> = {};
+const label = (k: string) => labelOverrides[k] || LABELS[k] || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase();
 
 const TABS: { key: string; title: string; ownerOnly?: boolean }[] = [
   { key: 'brand', title: 'Company details' },
@@ -167,6 +170,7 @@ export function AdminApp() {
         {tabs.map((t) => <button key={t.key} role="tab" aria-selected={tab === t.key} className={tab === t.key ? 'is-on' : ''} onClick={() => setTab(t.key)}>{t.title}</button>)}
       </div>
       <div className="adm-panel">
+        {(() => { labelOverrides = tab === 'brand' ? BRAND_LABELS : {}; return null; })()}
         <Field
           name={tab}
           value={data[tab]}

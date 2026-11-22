@@ -6,6 +6,7 @@ import { services, serviceBySlug } from '@/content/services';
 import { industries } from '@/content/industries';
 import { locations } from '@/content/locations';
 import { Breadcrumbs, CtaBand, FaqList, ServiceCard, Check } from '@/components/Bits';
+import { SHOW_PRICES } from '@/content/plans';
 import { JsonLd } from '@/components/JsonLd';
 import { StackChips } from '@/components/Platforms';
 import { faqLd, pageMeta, serviceLd } from '@/lib/seo';
@@ -41,7 +42,7 @@ export default async function ServicePage({ params }: Props) {
             <p className="lead">{s.intro}</p>
             <div className="page-hero__actions">
               <Link href={`/contact?service=${s.slug}`} className="btn btn-primary btn-lg">Get a free assessment</Link>
-              <Link href="/pricing" className="btn btn-ghost btn-lg">See pricing</Link>
+              <Link href="/pricing" className="btn btn-ghost btn-lg">{SHOW_PRICES ? 'See pricing' : 'See plans'}</Link>
             </div>
           </div>
           <div className="page-hero__media"><Image src={s.image} alt={`${s.name} for Canadian businesses`} fill sizes="(max-width: 900px) 100vw, 520px" priority /></div>
@@ -58,7 +59,7 @@ export default async function ServicePage({ params }: Props) {
           <aside className="aside-card">
             <h3>Best for</h3>
             <p>{s.bestFor}</p>
-            <p className="price-hint">{s.startingAt}</p>
+            {SHOW_PRICES && <p className="price-hint">{s.startingAt}</p>}
             <Link href={`/contact?service=${s.slug}`} className="btn btn-light btn-block">Talk to an architect</Link>
           </aside>
         </div>
