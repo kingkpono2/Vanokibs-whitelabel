@@ -24,7 +24,7 @@ export default async function IndustryPage({ params }: Props) {
   return (
     <>
       <PageHero eyebrow={i.name} title={i.headline} text={i.intro} image={i.image} crumbs={[{ name: 'Home', path: '/' }, { name: 'Industries', path: '/industries' }, { name: i.name, path: `/industries/${i.slug}` }]}>
-        <div className="page-hero__actions"><Link href="/contact" className="btn btn-primary btn-lg">Book a consultation</Link></div>
+        <div className="page-hero__actions"><Link href="/book" className="btn btn-primary btn-lg">Book a consultation</Link></div>
       </PageHero>
       <section className="section">
         <div className="container">

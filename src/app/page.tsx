@@ -32,7 +32,7 @@ export default function Home() {
             <p className="lead">{content.home.heroText}</p>
             <div className="hero-actions">
               <Link href="/pricing" className="btn btn-primary btn-lg">{SHOW_PRICES ? 'View pricing' : 'View plans'}</Link>
-              <Link href="/contact" className="btn btn-ghost btn-lg">Book a consultation</Link>
+              <Link href="/book" className="btn btn-ghost btn-lg">Book a consultation</Link>
             </div>
             <p className="hero-note">{content.home.heroNote}</p>
           </div>

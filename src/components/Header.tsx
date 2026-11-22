@@ -67,7 +67,7 @@ export function Header({ brandName, plansLabel, services, industries }: NavData)
         </nav>
 
         <div className="header-cta">
-          <Link href="/contact" className="btn btn-ghost btn-sm hide-sm">Book a call</Link>
+          <Link href="/book" className="btn btn-ghost btn-sm hide-sm">Book a call</Link>
           <Link href="/pricing" className="btn btn-primary btn-sm">Hire us</Link>
           <button className="menu-btn" aria-label="Open menu" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(true)}>
             <span /><span /><span />
@@ -91,7 +91,7 @@ export function Header({ brandName, plansLabel, services, industries }: NavData)
           <Link href="/how-it-works" className="mobile-link">How it works</Link>
           <Link href="/insights" className="mobile-link">Insights</Link>
           <Link href="/locations" className="mobile-link">Cities we serve</Link>
-          <Link href="/contact" className="btn btn-primary btn-block">Book a consultation</Link>
+          <Link href="/book" className="btn btn-primary btn-block">Book a consultation</Link>
         </div>
       </div>
       {open && <button className="mobile-overlay" aria-label="Close menu" onClick={() => setOpen(false)} />}

@@ -41,7 +41,7 @@ export default async function ServicePage({ params }: Props) {
             <h1>{s.headline}</h1>
             <p className="lead">{s.intro}</p>
             <div className="page-hero__actions">
-              <Link href={`/contact?service=${s.slug}`} className="btn btn-primary btn-lg">Get a free assessment</Link>
+              <Link href={`/book?service=${s.slug}`} className="btn btn-primary btn-lg">Book a consultation</Link>
               <Link href="/pricing" className="btn btn-ghost btn-lg">{SHOW_PRICES ? 'See pricing' : 'See plans'}</Link>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default async function ServicePage({ params }: Props) {
             <h3>Best for</h3>
             <p>{s.bestFor}</p>
             {SHOW_PRICES && <p className="price-hint">{s.startingAt}</p>}
-            <Link href={`/contact?service=${s.slug}`} className="btn btn-light btn-block">Talk to an architect</Link>
+            <Link href={`/book?service=${s.slug}`} className="btn btn-light btn-block">Book a consultation</Link>
           </aside>
         </div>
       </section>

@@ -67,6 +67,15 @@ Set up in **Vercel → Settings → Environment Variables**:
 
 Removing a user from `ADMIN_USERS` (and redeploying) revokes their access immediately.
 
+## Consultation bookings
+
+Visitors book a free consultation at **/book**: a calendar of free days, time slots, a short form, then a confirmation with “Add to calendar”. Double bookings are prevented on the server.
+
+- **Settings** (admin → Booking settings): weekly hours per day (e.g. `09:00-12:00, 13:00-17:00`), meeting length, minimum notice, how far ahead, time zone, page text.
+- **Bookings** (admin → Bookings): see upcoming and recent bookings, cancel (optionally emailing the client), block whole days or single times.
+- **Storage**: bookings contain personal details, so they are kept in a private database, not in this public repo. In Vercel: **Storage → Create Database → Upstash for Redis** (free plan) → connect to this project → Redeploy. The site reads `KV_REST_API_URL` / `KV_REST_API_TOKEN` (or `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`).
+- **Emails**: with the SMTP variables set, the client receives a confirmation with a calendar invite, and `CONTACT_TO` receives a notification.
+
 ## Run locally
 
 ```bash

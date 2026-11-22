@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { BookingsPanel } from './BookingsPanel';
 
 type Json = string | number | boolean | Json[] | { [k: string]: Json };
 type Obj = { [k: string]: Json };
@@ -15,6 +16,10 @@ const LABELS: Record<string, string> = {
   price: 'Price ($)', deposit: 'Deposit to start ($, 0 = pay in full)', includes: 'Included (one per line)', timeline: 'Timeline', hourBlocks: 'Prepaid hour blocks',
   validity: 'Valid for', short: 'Short summary', headline: 'Page heading', intro: 'Intro text', startingAt: 'Price note', outcomes: 'Outcomes (one per line)',
   showPrices: 'Show prices on the website (off = all prices hidden; pricing by consultation)',
+  enabled: 'Online booking switched on', pageTitle: 'Booking page heading', pageText: 'Booking page intro', meetingMinutes: 'Meeting length (minutes)',
+  timezone: 'Time zone (e.g. America/Toronto, America/Vancouver)', timezoneLabel: 'Time zone name shown to visitors', minNoticeHours: 'Minimum notice (hours)',
+  daysAhead: 'How many days ahead people can book', monday: 'Monday hours', tuesday: 'Tuesday hours', wednesday: 'Wednesday hours', thursday: 'Thursday hours',
+  friday: 'Friday hours', saturday: 'Saturday hours', sunday: 'Sunday hours', confirmationText: 'Message shown after booking',
   tagline: 'Tagline', description: 'Description', email: 'Contact email', phone: 'Contact phone',
 };
 const BRAND_LABELS: Record<string, string> = { name: 'Website / brand name (logo, titles)', legalName: 'Company name (legal operator)' };
@@ -22,9 +27,11 @@ let labelOverrides: Record<string, string> = {};
 const label = (k: string) => labelOverrides[k] || LABELS[k] || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase();
 
 const TABS: { key: string; title: string; ownerOnly?: boolean }[] = [
+  { key: 'bookings', title: 'Bookings' },
   { key: 'brand', title: 'Company details' },
   { key: 'home', title: 'Homepage' },
   { key: 'services', title: 'Services' },
+  { key: 'booking', title: 'Booking settings' },
   { key: 'pricing', title: 'Prices', ownerOnly: true },
 ];
 
@@ -91,7 +98,7 @@ export function AdminApp() {
   const [data, setData] = useState<Obj | null>(null);
   const [sha, setSha] = useState('');
   const [canSave, setCanSave] = useState(false);
-  const [tab, setTab] = useState('brand');
+  const [tab, setTab] = useState('bookings');
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -171,11 +178,14 @@ export function AdminApp() {
       </div>
       <div className="adm-panel">
         {(() => { labelOverrides = tab === 'brand' ? BRAND_LABELS : {}; return null; })()}
-        <Field
-          name={tab}
-          value={data[tab]}
-          onChange={(v) => { setData({ ...data, [tab]: v }); setDirty(true); }}
-        />
+        {tab === 'bookings' ? <BookingsPanel /> : (
+          <Field
+            name={tab}
+            value={data[tab]}
+            onChange={(v) => { setData({ ...data, [tab]: v }); setDirty(true); }}
+          />
+        )}
+        {tab === 'booking' && <p className="muted">Weekly hours use 24-hour times, e.g. <code>09:00-12:00, 13:00-17:00</code>. Leave a day empty to close it. Changes go live about 1–2 minutes after saving.</p>}
         {tab === 'services' && user.role !== 'owner' && <p className="muted">Price notes on services are managed by the owner and are not saved from this account.</p>}
       </div>
     </section>

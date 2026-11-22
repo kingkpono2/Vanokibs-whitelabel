@@ -431,3 +431,35 @@ p { margin: 0 0 1em; }
 .adm-check { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14.5px; }
 .adm-ok { margin: 0 0 12px; color: var(--teal); background: var(--teal-50); padding: 12px 14px; border-radius: 6px; }
 .field textarea { resize: vertical; }
+
+/* Booking */
+.book { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 24px; align-items: start; }
+.book-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.book-card h2 { font-size: 22px; margin: 0; }
+.book-card h3 { margin-bottom: 12px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.cal-nav { width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--line); background: #fff; font-size: 22px; cursor: pointer; color: var(--ink); }
+.cal-nav[disabled] { opacity: .35; cursor: default; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.cal-dow { text-align: center; font-size: 12.5px; font-weight: 600; color: var(--muted); padding-bottom: 4px; }
+.cal-day { aspect-ratio: 1; border: 1px solid transparent; border-radius: 6px; background: transparent; font: 500 15px var(--font-body), sans-serif; color: #b4bccb; }
+.cal-day.is-free { background: var(--blue-50); color: var(--blue); border-color: #d6e1f1; cursor: pointer; font-weight: 600; }
+.cal-day.is-free:hover { border-color: var(--blue); }
+.cal-day.is-on { background: var(--blue); color: #fff; border-color: var(--blue); }
+.cal-day.is-today { text-decoration: underline; text-underline-offset: 3px; }
+.cal-note { font-size: 14px; margin: 14px 0 0; }
+.slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-bottom: 18px; }
+.slot { padding: 10px 8px; border-radius: 6px; border: 1px solid var(--line); background: #fff; font: 600 15px var(--font-body), sans-serif; color: var(--blue); cursor: pointer; }
+.slot:hover { border-color: var(--blue); }
+.slot.is-on { background: var(--blue); border-color: var(--blue); color: #fff; }
+.book-form { display: grid; gap: 14px; border-top: 1px solid var(--line-2); padding-top: 18px; }
+.book-done { max-width: 640px; }
+.book-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+@media (max-width: 900px) { .book { grid-template-columns: minmax(0, 1fr); } }
+.adm-h2 { font-size: 20px; margin: 10px 0 0; }
+.adm-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.adm-booking { margin: 0; font-size: 15px; }
+.adm-blocked { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.adm-blocked li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.adm-past summary { cursor: pointer; font-weight: 600; margin-bottom: 8px; }
+.mt-s { margin-top: 10px; }

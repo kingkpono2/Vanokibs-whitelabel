@@ -52,7 +52,7 @@ export function CtaBand({ title = 'Talk to us about your project', text = 'Free 
           <p>{text}</p>
         </div>
         <div className="cta-band__actions">
-          <Link href="/contact" className="btn btn-light btn-lg">Book a consultation</Link>
+          <Link href="/book" className="btn btn-light btn-lg">Book a consultation</Link>
           <Link href="/pricing" className="btn btn-outline-light btn-lg">Plans</Link>
         </div>
       </div>

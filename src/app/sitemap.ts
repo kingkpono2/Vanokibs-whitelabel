@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...posts.map((p) => entry(`/insights/${p.slug}`, 0.6, 'yearly', new Date(`${p.date}T12:00:00Z`))),
     entry('/how-it-works', 0.6),
     entry('/faq', 0.6),
+    entry('/book', 0.8, 'weekly'),
     entry('/contact', 0.8),
     entry('/legal/terms', 0.2, 'yearly'),
     entry('/legal/privacy', 0.2, 'yearly'),

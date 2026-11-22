@@ -34,6 +34,7 @@ export function Footer() {
             <li><Link href="/how-it-works">How it works</Link></li>
             <li><Link href="/insights">Insights</Link></li>
             <li><Link href="/faq">FAQ</Link></li>
+            <li><Link href="/book">Book a consultation</Link></li>
             <li><Link href="/contact">Contact & quotes</Link></li>
             <li><Link href="/legal/terms">Terms of service</Link></li>
             <li><Link href="/legal/privacy">Privacy policy</Link></li>

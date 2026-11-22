@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { mailConfigured, sendMail } from '@/lib/mail';
 import { brand } from '@/content/brand';
 
 export const runtime = 'nodejs';
@@ -44,21 +44,13 @@ export async function POST(req: Request) {
   };
   const text = `${Object.entries(fields).map(([k, v]) => `${k}: ${v || '-'}`).join('\n')}\n\n${message}\n`;
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO, CONTACT_FROM } = process.env;
-  if (!SMTP_HOST || !CONTACT_TO) {
+  if (!mailConfigured()) {
     console.warn('contact form: SMTP not configured; request logged only');
     return Response.json({ message: brand.email ? `Our form is being set up. Please email us at ${brand.email} for now.` : 'Our form is being set up. Please try again shortly.' }, { status: 503 });
   }
   try {
-    const transport = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: Number(SMTP_PORT || 587),
-      secure: Number(SMTP_PORT) === 465,
-      auth: SMTP_USER ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
-    });
-    await transport.sendMail({
-      from: CONTACT_FROM || SMTP_USER,
-      to: CONTACT_TO,
+    await sendMail({
+      to: process.env.CONTACT_TO || '',
       replyTo: `${name} <${email}>`,
       subject: `New request: ${fields.Service || 'general'} from ${fields.Company || name}`,
       text,

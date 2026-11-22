@@ -23,7 +23,7 @@ export function CheckoutButton({ kind, id, billing = 'monthly', label, className
   const itemKey = `${kind}:${id}${kind === 'plan' ? `:${billing}` : ''}`;
 
   if (!showPrices) {
-    return <Link href={`/contact?item=${encodeURIComponent(itemKey)}`} className={className}>Book a consultation</Link>;
+    return <Link href={`/book?item=${encodeURIComponent(itemKey)}`} className={className}>Book a consultation</Link>;
   }
 
   async function start() {

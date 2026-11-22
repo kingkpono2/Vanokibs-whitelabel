@@ -418,5 +418,23 @@
         "Mailbox migrations with no lost mail"
       ]
     }
-  ]
+  ],
+  "booking": {
+    "enabled": true,
+    "pageTitle": "Book a free consultation",
+    "pageText": "Choose a time for a 30-minute video call with one of our consultants. We will discuss your goals and how we can help, at no cost.",
+    "meetingMinutes": 30,
+    "timezone": "America/Toronto",
+    "timezoneLabel": "Eastern Time",
+    "minNoticeHours": 24,
+    "daysAhead": 30,
+    "monday": "09:00-17:00",
+    "tuesday": "09:00-17:00",
+    "wednesday": "09:00-17:00",
+    "thursday": "09:00-17:00",
+    "friday": "09:00-15:00",
+    "saturday": "",
+    "sunday": "",
+    "confirmationText": "Thank you. Your consultation is booked. We will email you a video-call link before the meeting."
+  }
 }
