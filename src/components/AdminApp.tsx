@@ -102,6 +102,7 @@ export function AdminApp() {
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch('/api/admin/content', { cache: 'no-store' });
@@ -150,7 +151,18 @@ export function AdminApp() {
         <form className="quote-form adm-login" onSubmit={login}>
           <h1>Admin sign in</h1>
           <label className="field">Email<input name="email" type="email" autoComplete="username" required /></label>
-          <label className="field">Password<input name="password" type="password" autoComplete="current-password" required /></label>
+          <label className="field">Password
+            <span className="pw-wrap">
+              <input name="password" type={showPw ? 'text' : 'password'} autoComplete="current-password" required />
+              <button type="button" className="pw-eye" onClick={() => setShowPw(!showPw)} aria-label={showPw ? 'Hide password' : 'Show password'} aria-pressed={showPw}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                  {showPw && <path d="M3 3l18 18" />}
+                </svg>
+              </button>
+            </span>
+          </label>
           {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="alert">{msg.text}</p>}
           <button className="btn btn-primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
         </form>
