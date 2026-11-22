@@ -67,6 +67,8 @@ Set up in **Vercel → Settings → Environment Variables**:
 
 Removing a user from `ADMIN_USERS` (and redeploying) revokes their access immediately.
 
+**Passwords after the first set-up** are kept in `src/content/admin-store.enc.json`, encrypted (AES-256-GCM) with a key derived from `ADMIN_SECRET`, or from `ADMIN_USERS` if `ADMIN_SECRET` isn't set. Admins change their own password in the admin (**Change password**) or with **Forgot password?** on the sign-in page, which emails a 30-minute reset link. Changes apply within seconds, with no redeploy. Reset emails need the SMTP variables. Don't change `ADMIN_USERS` or `ADMIN_SECRET` afterwards: the store would no longer decrypt, and sign-in would fall back to the users in `ADMIN_USERS`.
+
 ## Consultation bookings
 
 Visitors book a free consultation at **/book**: a calendar of free days, time slots, a short form, then a confirmation with “Add to calendar”. Double bookings are prevented on the server.

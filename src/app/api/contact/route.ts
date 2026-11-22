@@ -1,4 +1,4 @@
-import { mailConfigured, sendMail } from '@/lib/mail';
+import { mailConfigured, notifyAddress, sendMail } from '@/lib/mail';
 import { brand } from '@/content/brand';
 
 export const runtime = 'nodejs';
@@ -44,13 +44,13 @@ export async function POST(req: Request) {
   };
   const text = `${Object.entries(fields).map(([k, v]) => `${k}: ${v || '-'}`).join('\n')}\n\n${message}\n`;
 
-  if (!mailConfigured()) {
+  if (!(await mailConfigured())) {
     console.warn('contact form: SMTP not configured; request logged only');
     return Response.json({ message: brand.email ? `Our form is being set up. Please email us at ${brand.email} for now.` : 'Our form is being set up. Please try again shortly.' }, { status: 503 });
   }
   try {
     await sendMail({
-      to: process.env.CONTACT_TO || '',
+      to: await notifyAddress(),
       replyTo: `${name} <${email}>`,
       subject: `New request: ${fields.Service || 'general'} from ${fields.Company || name}`,
       text,

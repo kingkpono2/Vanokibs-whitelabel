@@ -93,6 +93,27 @@ function ObjectFields({ obj, onChange, readOnly }: { obj: Obj; onChange: (v: Obj
   );
 }
 
+function PasswordInput({ name, autoComplete, minLength }: { name: string; autoComplete: string; minLength?: number }) {
+  const [show, setShow] = useState(false);
+  return (
+    <span className="pw-wrap">
+      <input name={name} type={show ? 'text' : 'password'} autoComplete={autoComplete} minLength={minLength} required />
+      <button type="button" className="pw-eye" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'} aria-pressed={show}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+          <circle cx="12" cy="12" r="3" />
+          {show && <path d="M3 3l18 18" />}
+        </svg>
+      </button>
+    </span>
+  );
+}
+
+async function post(url: string, body: unknown) {
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return { ok: res.ok, body: (await res.json().catch(() => ({}))) as { message?: string } };
+}
+
 export function AdminApp() {
   const [user, setUser] = useState<User | null>(null);
   const [data, setData] = useState<Obj | null>(null);
@@ -102,7 +123,9 @@ export function AdminApp() {
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
-  const [showPw, setShowPw] = useState(false);
+  const [mode, setMode] = useState<'login' | 'forgot' | 'reset'>('login');
+  const [reset, setReset] = useState<{ email: string; token: string } | null>(null);
+  const [pwOpen, setPwOpen] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch('/api/admin/content', { cache: 'no-store' });
@@ -112,7 +135,45 @@ export function AdminApp() {
     setUser(body.user); setData(body.data); setSha(body.sha || ''); setCanSave(body.canSave); setDirty(false);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get('reset') && q.get('email')) { setReset({ email: q.get('email')!, token: q.get('reset')! }); setMode('reset'); }
+    load();
+  }, [load]);
+
+  async function forgot(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setBusy(true); setMsg(null);
+    const r = await post('/api/admin/password/forgot', { email: new FormData(e.currentTarget).get('email') });
+    setBusy(false);
+    setMsg({ kind: r.ok ? 'ok' : 'err', text: r.body.message || 'Something went wrong.' });
+  }
+
+  async function doReset(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    if (f.get('password') !== f.get('confirm')) { setMsg({ kind: 'err', text: 'The two passwords don’t match.' }); return; }
+    setBusy(true); setMsg(null);
+    const r = await post('/api/admin/password/reset', { ...reset, password: f.get('password') });
+    setBusy(false);
+    if (!r.ok) { setMsg({ kind: 'err', text: r.body.message || 'Couldn’t reset the password.' }); return; }
+    window.history.replaceState(null, '', '/admin');
+    setReset(null); setMode('login');
+    setMsg({ kind: 'ok', text: 'Password changed. You can sign in now.' });
+  }
+
+  async function changePw(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const f = new FormData(form);
+    if (f.get('next') !== f.get('confirm')) { setMsg({ kind: 'err', text: 'The two new passwords don’t match.' }); return; }
+    setBusy(true); setMsg(null);
+    const r = await post('/api/admin/password/change', { current: f.get('current'), next: f.get('next') });
+    setBusy(false);
+    if (!r.ok) { setMsg({ kind: 'err', text: r.body.message || 'Couldn’t change the password.' }); return; }
+    form.reset(); setPwOpen(false);
+    setMsg({ kind: 'ok', text: 'Password changed.' });
+  }
   useEffect(() => {
     const warn = (e: BeforeUnloadEvent) => { if (dirty) e.preventDefault(); };
     window.addEventListener('beforeunload', warn);
@@ -148,24 +209,34 @@ export function AdminApp() {
   if (!user || !data) {
     return (
       <section className="container adm">
-        <form className="quote-form adm-login" onSubmit={login}>
-          <h1>Admin sign in</h1>
-          <label className="field">Email<input name="email" type="email" autoComplete="username" required /></label>
-          <label className="field">Password
-            <span className="pw-wrap">
-              <input name="password" type={showPw ? 'text' : 'password'} autoComplete="current-password" required />
-              <button type="button" className="pw-eye" onClick={() => setShowPw(!showPw)} aria-label={showPw ? 'Hide password' : 'Show password'} aria-pressed={showPw}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
-                  <circle cx="12" cy="12" r="3" />
-                  {showPw && <path d="M3 3l18 18" />}
-                </svg>
-              </button>
-            </span>
-          </label>
-          {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="alert">{msg.text}</p>}
-          <button className="btn btn-primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-        </form>
+        {mode === 'reset' && reset ? (
+          <form className="quote-form adm-login" onSubmit={doReset}>
+            <h1>Set a new password</h1>
+            <p className="muted">For {reset.email}. Use at least 10 characters.</p>
+            <label className="field">New password<PasswordInput name="password" autoComplete="new-password" minLength={10} /></label>
+            <label className="field">Repeat new password<PasswordInput name="confirm" autoComplete="new-password" minLength={10} /></label>
+            {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="alert">{msg.text}</p>}
+            <button className="btn btn-primary" disabled={busy}>{busy ? 'Saving…' : 'Save new password'}</button>
+          </form>
+        ) : mode === 'forgot' ? (
+          <form className="quote-form adm-login" onSubmit={forgot}>
+            <h1>Forgot password</h1>
+            <p className="muted">Enter your admin email and we’ll send you a link to set a new password.</p>
+            <label className="field">Email<input name="email" type="email" autoComplete="username" required /></label>
+            {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="alert">{msg.text}</p>}
+            <button className="btn btn-primary" disabled={busy}>{busy ? 'Sending…' : 'Send reset link'}</button>
+            <button type="button" className="adm-link" onClick={() => { setMode('login'); setMsg(null); }}>Back to sign in</button>
+          </form>
+        ) : (
+          <form className="quote-form adm-login" onSubmit={login}>
+            <h1>Admin sign in</h1>
+            <label className="field">Email<input name="email" type="email" autoComplete="username" required /></label>
+            <label className="field">Password<PasswordInput name="password" autoComplete="current-password" /></label>
+            {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="alert">{msg.text}</p>}
+            <button className="btn btn-primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
+            <button type="button" className="adm-link" onClick={() => { setMode('forgot'); setMsg(null); }}>Forgot password?</button>
+          </form>
+        )}
       </section>
     );
   }
@@ -180,9 +251,24 @@ export function AdminApp() {
         </div>
         <div className="adm-actions">
           <button className="btn btn-primary" onClick={save} disabled={busy || !canSave || !dirty}>{busy ? 'Saving…' : dirty ? 'Save changes' : 'Saved'}</button>
+          <button className="btn btn-ghost" onClick={() => { setPwOpen(!pwOpen); setMsg(null); }} aria-expanded={pwOpen}>Change password</button>
           <button className="btn btn-ghost" onClick={logout}>Sign out</button>
         </div>
       </div>
+      {pwOpen && (
+        <form className="adm-panel adm-pw" onSubmit={changePw}>
+          <h2 className="adm-h2">Change your password</h2>
+          <div className="field-row">
+            <label className="field">Current password<PasswordInput name="current" autoComplete="current-password" /></label>
+            <span />
+          </div>
+          <div className="field-row">
+            <label className="field">New password (10+ characters)<PasswordInput name="next" autoComplete="new-password" minLength={10} /></label>
+            <label className="field">Repeat new password<PasswordInput name="confirm" autoComplete="new-password" minLength={10} /></label>
+          </div>
+          <div className="adm-actions"><button className="btn btn-primary" disabled={busy}>{busy ? 'Saving…' : 'Save new password'}</button><button type="button" className="btn btn-ghost" onClick={() => setPwOpen(false)}>Cancel</button></div>
+        </form>
+      )}
       {!canSave && <p className="form-error">Saving is switched off until GITHUB_TOKEN is added in Vercel (see README).</p>}
       {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="status">{msg.text}</p>}
       <div className="billing-toggle adm-tabs" role="tablist">

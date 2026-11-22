@@ -1,6 +1,6 @@
 import { kvConfigured } from '@/lib/kv';
 import { createBooking, freeSlots, icsFor, localDate, longLabel, settings, takenSlots } from '@/lib/booking';
-import { sendMail } from '@/lib/mail';
+import { notifyAddress, sendMail } from '@/lib/mail';
 import { brand } from '@/content/brand';
 import { serviceBySlug } from '@/content/services';
 
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     const attach = [{ filename: 'consultation.ics', content: ics, contentType: 'text/calendar; charset=utf-8; method=REQUEST' }];
     try {
       await sendMail({ to: email, subject: `Your ${title}: ${when}`, text: `Hi ${name},\n\nYour ${settings.meetingMinutes}-minute consultation is booked for ${when}.\n${settings.confirmationText}\n\n${brand.name}\n`, attachments: attach });
-      await sendMail({ to: process.env.CONTACT_TO || '', replyTo: `${name} <${email}>`, subject: `New booking: ${name}, ${when}`, text: `Name: ${name}\nEmail: ${email}\nCompany: ${result.company || '-'}\nPhone: ${result.phone || '-'}\nTopic: ${serviceName || '-'}\nWhen: ${when}\n\n${result.notes}\n`, attachments: attach });
+      await sendMail({ to: await notifyAddress(), replyTo: `${name} <${email}>`, subject: `New booking: ${name}, ${when}`, text: `Name: ${name}\nEmail: ${email}\nCompany: ${result.company || '-'}\nPhone: ${result.phone || '-'}\nTopic: ${serviceName || '-'}\nWhen: ${when}\n\n${result.notes}\n`, attachments: attach });
     } catch (err) {
       console.error('booking email failed', err instanceof Error ? err.message : err);
     }

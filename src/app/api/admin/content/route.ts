@@ -4,7 +4,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
-  const session = getSession(req);
+  const session = await getSession(req);
   if (!session) return Response.json({ user: null }); // not signed in: the admin shows the sign-in form
   try {
     const { data, sha } = await readContent();
@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  const session = getSession(req);
+  const session = await getSession(req);
   if (!session) return Response.json({ message: 'Please sign in.' }, { status: 401 });
   if (!canSave()) return Response.json({ message: 'Saving needs GITHUB_TOKEN in Vercel (see README).' }, { status: 503 });
   const body = (await req.json().catch(() => null)) as { data?: unknown; sha?: string } | null;

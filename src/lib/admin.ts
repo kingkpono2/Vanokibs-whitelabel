@@ -1,4 +1,4 @@
-import { createHmac, scryptSync, timingSafeEqual } from 'node:crypto';
+import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import bundled from '@/content/editable.json';
 
 export type Content = typeof bundled;
@@ -9,14 +9,16 @@ const CONTENT_PATH = 'src/content/editable.json';
 
 export type Role = 'owner' | 'support';
 export type Session = { email: string; role: Role };
-type User = { email: string; role: Role; hash: string };
+export type User = { email: string; role: Role; hash: string; updatedAt?: string };
 
 /**
- * Admin users come from the ADMIN_USERS environment variable (never from the repo):
- * [{"email":"...","role":"owner"|"support","hash":"scrypt$<salt>$<key>"}]
- * Owners can edit everything; support can edit text but not prices.
+ * Admin users and password-reset tokens live in an encrypted file in the repo
+ * (src/content/admin-store.enc.json, AES-256-GCM). The key is derived on the server from
+ * ADMIN_SECRET, or from ADMIN_USERS when ADMIN_SECRET isn't set, so the file is unreadable
+ * without the Vercel settings. If the file is missing or can't be decrypted, the users in
+ * the ADMIN_USERS environment variable are used. Owners edit everything; support can't edit prices.
  */
-function users(): User[] {
+function envUsers(): User[] {
   try {
     const list = JSON.parse(process.env.ADMIN_USERS || '[]') as User[];
     return list.filter((u) => u && u.email && u.hash && (u.role === 'owner' || u.role === 'support'));
@@ -25,13 +27,31 @@ function users(): User[] {
   }
 }
 
-/** Session signing key: ADMIN_SECRET if set, otherwise derived from ADMIN_USERS (changing a password signs everyone out). */
-const secret = () =>
-  process.env.ADMIN_SECRET || (process.env.ADMIN_USERS ? createHmac('sha256', 'vanokibs-session').update(process.env.ADMIN_USERS).digest('base64url') : '');
+/** Stable secret text: ADMIN_SECRET, or ADMIN_USERS normalised (whitespace in the Vercel value doesn't matter). */
+function baseSecret() {
+  if (process.env.ADMIN_SECRET) return process.env.ADMIN_SECRET;
+  try {
+    return process.env.ADMIN_USERS ? JSON.stringify(JSON.parse(process.env.ADMIN_USERS)) : '';
+  } catch {
+    return '';
+  }
+}
+
+const secret = () => (baseSecret() ? createHmac('sha256', 'vanokibs-session').update(baseSecret()).digest('base64url') : '');
 const sign = (v: string) => createHmac('sha256', secret()).update(v).digest('base64url');
 
-export function adminConfigured() {
-  return secret().length >= 32 && users().length > 0;
+async function users(): Promise<User[]> {
+  const store = (await readStore()).store;
+  return store?.users?.length ? store.users : envUsers();
+}
+
+export async function adminConfigured() {
+  return secret().length >= 32 && (await users()).length > 0;
+}
+
+export function hashPassword(password: string) {
+  const salt = randomBytes(16);
+  return `scrypt$${salt.toString('base64url')}$${scryptSync(password, salt, 32, { N: 16384, r: 8, p: 1 }).toString('base64url')}`;
 }
 
 function verifyHash(password: string, stored: string) {
@@ -43,8 +63,8 @@ function verifyHash(password: string, stored: string) {
 }
 
 /** Returns the session for valid credentials. Always does the hashing work, so timing doesn't reveal valid emails. */
-export function checkLogin(email: string, password: string): Session | null {
-  const user = users().find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
+export async function checkLogin(email: string, password: string): Promise<Session | null> {
+  const user = (await users()).find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
   const ok = verifyHash(password, user?.hash || 'scrypt$AAAAAAAAAAAAAAAAAAAAAA$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
   return user && ok ? { email: user.email, role: user.role } : null;
 }
@@ -56,10 +76,9 @@ export function sessionCookie(s: Session) {
 }
 export const clearCookie = () => `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`;
 
-export function getSession(req: Request): Session | null {
-  if (!adminConfigured()) return null;
+export async function getSession(req: Request): Promise<Session | null> {
   const raw = (req.headers.get('cookie') || '').split(/;\s*/).find((c) => c.startsWith(`${COOKIE}=`));
-  if (!raw) return null;
+  if (!raw || !secret()) return null;
   const parts = raw.slice(COOKIE.length + 1).split('.');
   if (parts.length !== 4) return null;
   const [em, role, exp, sig] = parts;
@@ -68,11 +87,117 @@ export function getSession(req: Request): Session | null {
   if (expected.length !== sig.length || !timingSafeEqual(Buffer.from(expected), Buffer.from(sig))) return null;
   if (Number(exp) < Date.now() / 1000 || (role !== 'owner' && role !== 'support')) return null;
   const email = Buffer.from(em, 'base64url').toString('utf8');
-  // The user must still exist with the same role (removing them from ADMIN_USERS revokes access).
-  const user = users().find((u) => u.email.toLowerCase() === email.toLowerCase() && u.role === role);
+  // The user must still exist with the same role (removing them revokes access).
+  const user = (await users()).find((u) => u.email.toLowerCase() === email.toLowerCase() && u.role === role);
   return user ? { email: user.email, role: user.role } : null;
 }
 
+/* ------------------------------------------------------- encrypted admin store */
+
+export type MailSettings = { host: string; port: number; user: string; pass: string; from: string; fromName: string; notifyTo: string };
+export type Store = {
+  users: User[];
+  resets: { email: string; tokenHash: string; exp: number }[];
+  mail?: MailSettings;
+};
+const STORE_PATH = 'src/content/admin-store.enc.json';
+const storeKey = () => (baseSecret() ? createHash('sha256').update(`vanokibs-admin-store:${baseSecret()}`).digest() : null);
+
+export function encryptStore(store: Store, key: Buffer) {
+  const iv = randomBytes(12);
+  const c = createCipheriv('aes-256-gcm', key, iv);
+  const data = Buffer.concat([c.update(JSON.stringify(store), 'utf8'), c.final()]);
+  return JSON.stringify({ v: 1, iv: iv.toString('base64'), tag: c.getAuthTag().toString('base64'), data: data.toString('base64') }, null, 1);
+}
+
+function decryptStore(text: string, key: Buffer): Store | null {
+  try {
+    const f = JSON.parse(text) as { iv: string; tag: string; data: string };
+    const d = createDecipheriv('aes-256-gcm', key, Buffer.from(f.iv, 'base64'));
+    d.setAuthTag(Buffer.from(f.tag, 'base64'));
+    return JSON.parse(Buffer.concat([d.update(Buffer.from(f.data, 'base64')), d.final()]).toString('utf8')) as Store;
+  } catch {
+    return null;
+  }
+}
+
+let cache: { at: number; value: { store: Store | null; sha: string | null } } | null = null;
+
+/** Latest store from GitHub (cached 10 s), so password changes apply without a redeploy. */
+export async function readStore(fresh = false): Promise<{ store: Store | null; sha: string | null }> {
+  if (!fresh && cache && Date.now() - cache.at < 10_000) return cache.value;
+  const key = storeKey();
+  let value: { store: Store | null; sha: string | null } = { store: null, sha: null };
+  if (key && canSave()) {
+    try {
+      const res = await gh(`${STORE_PATH}?ref=${encodeURIComponent(branch())}`);
+      if (res.ok) {
+        const body = (await res.json()) as { content: string; sha: string };
+        value = { store: decryptStore(Buffer.from(body.content, 'base64').toString('utf8'), key), sha: body.sha };
+      }
+    } catch {
+      /* fall back to environment users */
+    }
+  }
+  cache = { at: Date.now(), value };
+  return value;
+}
+
+export async function writeStore(store: Store, sha: string | null, message: string) {
+  const key = storeKey();
+  if (!key || !canSave()) throw new Error('Store not available');
+  const res = await gh(STORE_PATH, {
+    method: 'PUT',
+    body: JSON.stringify({ message, content: Buffer.from(`${encryptStore(store, key)}\n`).toString('base64'), ...(sha ? { sha } : {}), branch: branch() }),
+  });
+  if (!res.ok) throw new GitHubError(res.status, 'save');
+  cache = null;
+}
+
+/** Current store, created from the environment users the first time it is needed. */
+async function editableStore() {
+  const { store, sha } = await readStore(true);
+  return { store: store || { users: envUsers(), resets: [] }, sha };
+}
+
+const tokenHash = (t: string) => createHash('sha256').update(t).digest('base64url');
+export const PASSWORD_MIN = 10;
+
+/** Creates a reset token (valid 30 minutes) if the email belongs to an admin. Returns the token or null. */
+export async function createResetToken(email: string): Promise<string | null> {
+  const { store, sha } = await editableStore();
+  const user = store.users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
+  if (!user) return null;
+  const token = randomBytes(32).toString('base64url');
+  const now = Date.now();
+  store.resets = (store.resets || []).filter((r) => r.exp > now && r.email !== user.email).concat({ email: user.email, tokenHash: tokenHash(token), exp: now + 30 * 60_000 });
+  await writeStore(store, sha, 'Admin: password reset requested');
+  return token;
+}
+
+export async function resetPassword(email: string, token: string, password: string): Promise<boolean> {
+  const { store, sha } = await editableStore();
+  const now = Date.now();
+  const match = (store.resets || []).find((r) => r.email.toLowerCase() === email.trim().toLowerCase() && r.exp > now &&
+    r.tokenHash.length === tokenHash(token).length && timingSafeEqual(Buffer.from(r.tokenHash), Buffer.from(tokenHash(token))));
+  const user = match && store.users.find((u) => u.email === match.email);
+  if (!user) return false;
+  user.hash = hashPassword(password);
+  user.updatedAt = new Date().toISOString();
+  store.resets = store.resets.filter((r) => r !== match && r.exp > now);
+  await writeStore(store, sha, 'Admin: password changed');
+  return true;
+}
+
+export async function changePassword(session: Session, current: string, next: string): Promise<boolean> {
+  const { store, sha } = await editableStore();
+  const user = store.users.find((u) => u.email === session.email);
+  if (!user || !verifyHash(current, user.hash)) return false;
+  user.hash = hashPassword(next);
+  user.updatedAt = new Date().toISOString();
+  await writeStore(store, sha, 'Admin: password changed');
+  return true;
+}
 
 /* ------------------------------------------------------------ GitHub storage */
 

@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
-  if (!getSession(req)) return Response.json({ message: 'Please sign in.' }, { status: 401 });
+  if (!await getSession(req)) return Response.json({ message: 'Please sign in.' }, { status: 401 });
   if (!kvConfigured()) return Response.json({ configured: false });
   try {
     const [bookings, days, slots] = await Promise.all([listBookings(30), kv<string[]>('SMEMBERS', 'bk:blocked:days'), kv<string[]>('SMEMBERS', 'bk:blocked:slots')]);
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const session = getSession(req);
+  const session = await getSession(req);
   if (!session) return Response.json({ message: 'Please sign in.' }, { status: 401 });
   if (!kvConfigured()) return Response.json({ message: 'Booking storage is not set up.' }, { status: 503 });
   const body = (await req.json().catch(() => ({}))) as { action?: string; id?: string; date?: string; time?: string; start?: number; notify?: boolean };
