@@ -217,7 +217,7 @@ const repo = () => process.env.GITHUB_REPO || 'kingkpono2/Vanokibs-whitelabel';
 const branch = () => process.env.GITHUB_BRANCH || 'main';
 /** Candidate GitHub tokens, by setting name. Whichever GitHub accepts is used (and remembered). */
 const tokenCandidates = () =>
-  (['GITHUB_TOKEN', 'GITHUB_USER'] as const)
+  (['GITHUB_TOKEN', 'GITHUB_USER', 'VANOKIBS_ADMIN', 'GH_TOKEN', 'GITHUB_PAT'] as const)
     .map((name) => ({ name, value: (process.env[name] || '').trim() }))
     .filter((t, i, all) => t.value.length > 20 && all.findIndex((x) => x.value === t.value) === i);
 let workingToken: string | null = null;
