@@ -1,18 +1,4 @@
-import Link from 'next/link';
-import { brand } from '@/content/brand';
-import { Logo } from '@/components/Logo';
-
-/** Plain admin chrome: logo and a link back to the site, nothing else. */
+/** Admin chrome lives in AdminApp (top bar with account menu and sign out, sidebar navigation). */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <header className="adm-top">
-        <div className="container adm-top__row">
-          <span className="adm-top__brand"><Logo name={brand.name} /> <span className="adm-top__label">Admin</span></span>
-          <Link href="/" className="adm-top__site">View website</Link>
-        </div>
-      </header>
-      <main id="main">{children}</main>
-    </>
-  );
+  return <main id="main" className="adm-root">{children}</main>;
 }

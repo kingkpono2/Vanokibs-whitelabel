@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { BookingsPanel } from './BookingsPanel';
+import { Logo } from './Logo';
 
 type Json = string | number | boolean | Json[] | { [k: string]: Json };
 type Obj = { [k: string]: Json };
@@ -26,13 +27,14 @@ const BRAND_LABELS: Record<string, string> = { name: 'Website / brand name (logo
 let labelOverrides: Record<string, string> = {};
 const label = (k: string) => labelOverrides[k] || LABELS[k] || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase();
 
-const TABS: { key: string; title: string; ownerOnly?: boolean }[] = [
-  { key: 'bookings', title: 'Bookings' },
-  { key: 'brand', title: 'Company details' },
-  { key: 'home', title: 'Homepage' },
-  { key: 'services', title: 'Services' },
-  { key: 'booking', title: 'Booking settings' },
-  { key: 'pricing', title: 'Prices', ownerOnly: true },
+type Section = { key: string; title: string; group: 'Bookings' | 'Website'; desc: string; ownerOnly?: boolean };
+const TABS: Section[] = [
+  { key: 'bookings', title: 'Bookings', group: 'Bookings', desc: 'Upcoming consultations and the days or times you are not available.' },
+  { key: 'booking', title: 'Booking settings', group: 'Bookings', desc: 'Weekly hours, meeting length, notice period and how far ahead people can book.' },
+  { key: 'brand', title: 'Company details', group: 'Website', desc: 'Website name, company name, tagline and contact details shown across the site.' },
+  { key: 'home', title: 'Homepage', group: 'Website', desc: 'Main heading, intro text and the questions and answers on the homepage.' },
+  { key: 'services', title: 'Services', group: 'Website', desc: 'Service names, summaries and what each one includes.' },
+  { key: 'pricing', title: 'Prices', group: 'Website', desc: 'Plans and prices, and whether prices are shown on the website.', ownerOnly: true },
 ];
 
 function Field({ name, value, onChange, readOnly }: { name: string; value: Json; onChange: (v: Json) => void; readOnly?: boolean }) {
@@ -114,7 +116,7 @@ async function post(url: string, body: unknown) {
   return { ok: res.ok, body: (await res.json().catch(() => ({}))) as { message?: string } };
 }
 
-export function AdminApp() {
+export function AdminApp({ brandName }: { brandName: string }) {
   const [user, setUser] = useState<User | null>(null);
   const [data, setData] = useState<Obj | null>(null);
   const [sha, setSha] = useState('');
@@ -192,8 +194,10 @@ export function AdminApp() {
   }
 
   async function logout() {
+    if (dirty && !window.confirm('You have unsaved changes. Sign out anyway?')) return;
     await fetch('/api/admin/login', { method: 'DELETE' });
-    setUser(null); setData(null);
+    setUser(null); setData(null); setDirty(false); setPwOpen(false); setTab('bookings'); setMode('login');
+    setMsg({ kind: 'ok', text: 'You have signed out.' });
   }
 
   async function save() {
@@ -206,8 +210,27 @@ export function AdminApp() {
     await load();
   }
 
+  const topBar = (
+    <header className="adm-top">
+      <div className="adm-top__row">
+        <a className="adm-top__brand" href="/admin"><Logo name={brandName} /><span className="adm-top__label">Admin</span></a>
+        <nav className="adm-top__menu" aria-label="Account">
+          <a href="/" className="adm-top__link" target="_blank" rel="noopener">View website <span aria-hidden="true">↗</span></a>
+          {user && <>
+            <span className="adm-top__user" title={user.email}><span className="adm-top__email">{user.email}</span><span className={`adm-role adm-role--${user.role}`}>{user.role === 'owner' ? 'Owner' : 'Support'}</span></span>
+            <button type="button" className="adm-top__link" onClick={() => { setPwOpen(!pwOpen); setMsg(null); }} aria-expanded={pwOpen}><span className="adm-long">Change password</span><span className="adm-short">Password</span></button>
+            <button type="button" className="btn btn-ghost adm-signout" onClick={logout}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><path d="M10 17l5-5-5-5" /><path d="M15 12H3" /></svg>
+              Sign out</button>
+          </>}
+        </nav>
+      </div>
+    </header>
+  );
+
   if (!user || !data) {
     return (
+      <>{topBar}
       <section className="container adm">
         {mode === 'reset' && reset ? (
           <form className="quote-form adm-login" onSubmit={doReset}>
@@ -237,55 +260,69 @@ export function AdminApp() {
             <button type="button" className="adm-link" onClick={() => { setMode('forgot'); setMsg(null); }}>Forgot password?</button>
           </form>
         )}
-      </section>
+      </section></>
     );
   }
 
   const tabs = TABS.filter((t) => !t.ownerOnly || user.role === 'owner');
+  const current = tabs.find((t) => t.key === tab) || tabs[0];
+  const isContent = current.key !== 'bookings';
+  const go = (key: string) => {
+    if (dirty && !window.confirm('You have unsaved changes. Leave this section without saving?')) return;
+    if (dirty) { void load(); }
+    setTab(key); setMsg(null); window.scrollTo({ top: 0 });
+  };
   return (
-    <section className="container adm">
-      <div className="adm-bar">
-        <div>
-          <h1>Website content</h1>
-          <p className="muted">Signed in as {user.email} ({user.role === 'owner' ? 'Owner: full access' : 'Support: text only, prices locked'})</p>
-        </div>
-        <div className="adm-actions">
-          <button className="btn btn-primary" onClick={save} disabled={busy || !canSave || !dirty}>{busy ? 'Saving…' : dirty ? 'Save changes' : 'Saved'}</button>
-          <button className="btn btn-ghost" onClick={() => { setPwOpen(!pwOpen); setMsg(null); }} aria-expanded={pwOpen}>Change password</button>
-          <button className="btn btn-ghost" onClick={logout}>Sign out</button>
-        </div>
+    <>
+      {topBar}
+      <div className="adm-layout">
+        <nav className="adm-nav" aria-label="Admin sections">
+          {(['Bookings', 'Website'] as const).map((g) => (
+            <div className="adm-nav__group" key={g}>
+              <p className="adm-nav__title">{g}</p>
+              {tabs.filter((t) => t.group === g).map((t) => (
+                <button key={t.key} type="button" className={`adm-nav__item${t.key === current.key ? ' is-on' : ''}`} aria-current={t.key === current.key ? 'page' : undefined} onClick={() => go(t.key)}>{t.title}</button>
+              ))}
+            </div>
+          ))}
+        </nav>
+        <section className="adm-main">
+          <header className="adm-head">
+            <h1>{current.title}</h1>
+            <p className="muted">{current.desc}</p>
+          </header>
+          {pwOpen && (
+            <form className="adm-panel adm-pw" onSubmit={changePw}>
+              <h2 className="adm-h2">Change your password</h2>
+              <label className="field">Current password<PasswordInput name="current" autoComplete="current-password" /></label>
+              <div className="field-row">
+                <label className="field">New password (10+ characters)<PasswordInput name="next" autoComplete="new-password" minLength={10} /></label>
+                <label className="field">Repeat new password<PasswordInput name="confirm" autoComplete="new-password" minLength={10} /></label>
+              </div>
+              <div className="adm-actions"><button className="btn btn-primary" disabled={busy}>{busy ? 'Saving…' : 'Save new password'}</button><button type="button" className="btn btn-ghost" onClick={() => setPwOpen(false)}>Cancel</button></div>
+            </form>
+          )}
+          {!canSave && isContent && <p className="form-error">Saving is switched off until a GitHub token is added in Vercel (see README).</p>}
+          {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="status">{msg.text}</p>}
+          <div className="adm-panel">
+            {(() => { labelOverrides = current.key === 'brand' ? BRAND_LABELS : {}; return null; })()}
+            {current.key === 'bookings' ? <BookingsPanel /> : (
+              <Field name={current.key} value={data[current.key]} onChange={(v) => { setData({ ...data, [current.key]: v }); setDirty(true); }} />
+            )}
+            {current.key === 'booking' && <p className="muted">Weekly hours use 24-hour times, e.g. <code>09:00-12:00, 13:00-17:00</code>. Leave a day empty to close it.</p>}
+            {current.key === 'services' && user.role !== 'owner' && <p className="muted">Price notes on services are managed by the owner and are not saved from this account.</p>}
+          </div>
+        </section>
       </div>
-      {pwOpen && (
-        <form className="adm-panel adm-pw" onSubmit={changePw}>
-          <h2 className="adm-h2">Change your password</h2>
-          <div className="field-row">
-            <label className="field">Current password<PasswordInput name="current" autoComplete="current-password" /></label>
-            <span />
+      {isContent && dirty && (
+        <div className="adm-savebar" role="region" aria-label="Unsaved changes">
+          <span>You have unsaved changes. They go live about 1–2 minutes after saving.</span>
+          <div className="adm-actions">
+            <button type="button" className="btn btn-ghost" onClick={() => { void load(); setMsg(null); }} disabled={busy}>Discard</button>
+            <button type="button" className="btn btn-primary" onClick={save} disabled={busy || !canSave}>{busy ? 'Saving…' : 'Save changes'}</button>
           </div>
-          <div className="field-row">
-            <label className="field">New password (10+ characters)<PasswordInput name="next" autoComplete="new-password" minLength={10} /></label>
-            <label className="field">Repeat new password<PasswordInput name="confirm" autoComplete="new-password" minLength={10} /></label>
-          </div>
-          <div className="adm-actions"><button className="btn btn-primary" disabled={busy}>{busy ? 'Saving…' : 'Save new password'}</button><button type="button" className="btn btn-ghost" onClick={() => setPwOpen(false)}>Cancel</button></div>
-        </form>
+        </div>
       )}
-      {!canSave && <p className="form-error">Saving is switched off until GITHUB_TOKEN is added in Vercel (see README).</p>}
-      {msg && <p className={msg.kind === 'err' ? 'form-error' : 'adm-ok'} role="status">{msg.text}</p>}
-      <div className="billing-toggle adm-tabs" role="tablist">
-        {tabs.map((t) => <button key={t.key} role="tab" aria-selected={tab === t.key} className={tab === t.key ? 'is-on' : ''} onClick={() => setTab(t.key)}>{t.title}</button>)}
-      </div>
-      <div className="adm-panel">
-        {(() => { labelOverrides = tab === 'brand' ? BRAND_LABELS : {}; return null; })()}
-        {tab === 'bookings' ? <BookingsPanel /> : (
-          <Field
-            name={tab}
-            value={data[tab]}
-            onChange={(v) => { setData({ ...data, [tab]: v }); setDirty(true); }}
-          />
-        )}
-        {tab === 'booking' && <p className="muted">Weekly hours use 24-hour times, e.g. <code>09:00-12:00, 13:00-17:00</code>. Leave a day empty to close it. Changes go live about 1–2 minutes after saving.</p>}
-        {tab === 'services' && user.role !== 'owner' && <p className="muted">Price notes on services are managed by the owner and are not saved from this account.</p>}
-      </div>
-    </section>
+    </>
   );
 }
