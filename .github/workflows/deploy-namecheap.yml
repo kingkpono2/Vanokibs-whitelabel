@@ -1,0 +1,59 @@
+# Builds the site for the Namecheap hosting account (cobalthelm.com) and attaches the package
+# ("release" artifact) to the run. The hosting account checks for new successful runs every
+# 2 minutes and installs them itself (deploy/pull-release.py), so no hosting login is stored here.
+# Runs on every push, including the commits the admin makes when content is saved.
+name: Deploy to Namecheap
+
+on:
+  push:
+    branches: [main, cobalthelm]
+  workflow_dispatch:
+
+concurrency:
+  group: namecheap-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_PUBLIC_SITE_URL: https://cobalthelm.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Package the release
+        run: |
+          set -euo pipefail
+          rm -rf release && cp -r .next/standalone release
+          mkdir -p release/.next && cp -r .next/static release/.next/static
+          cp -r public release/public
+          cp deploy/passenger-start.js release/start.js
+          cp deploy/activate.sh release/activate.sh
+          cp deploy/pull-release.py release/pull-release.py
+          echo "$GITHUB_SHA" > release/REVISION
+          echo "$GITHUB_SHA" > release/public/revision.txt
+          tar -czf release.tgz -C release .
+          ls -lh release.tgz
+
+      - name: Attach the release
+        uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: release.tgz
+          retention-days: 7
+          if-no-files-found: error

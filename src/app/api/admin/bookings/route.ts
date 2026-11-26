@@ -1,6 +1,5 @@
 import { getSession } from '@/lib/admin';
-import { kv, kvConfigured } from '@/lib/kv';
-import { cancelBooking, listBookings, longLabel, setBlocked, settings, zonedToUtc } from '@/lib/booking';
+import { cancelBooking, listBlocked, listBookings, longLabel, setBlocked, settings, storageConfigured, zonedToUtc } from '@/lib/booking';
 import { sendMail } from '@/lib/mail';
 import { brand } from '@/content/brand';
 
@@ -9,9 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   if (!await getSession(req)) return Response.json({ message: 'Please sign in.' }, { status: 401 });
-  if (!kvConfigured()) return Response.json({ configured: false });
+  if (!storageConfigured()) return Response.json({ configured: false });
   try {
-    const [bookings, days, slots] = await Promise.all([listBookings(30), kv<string[]>('SMEMBERS', 'bk:blocked:days'), kv<string[]>('SMEMBERS', 'bk:blocked:slots')]);
+    const [bookings, { days, slots }] = await Promise.all([listBookings(30), listBlocked()]);
     return Response.json({
       configured: true,
       timezoneLabel: settings.timezoneLabel,
@@ -28,7 +27,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const session = await getSession(req);
   if (!session) return Response.json({ message: 'Please sign in.' }, { status: 401 });
-  if (!kvConfigured()) return Response.json({ message: 'Booking storage is not set up.' }, { status: 503 });
+  if (!storageConfigured()) return Response.json({ message: 'Booking storage is not set up.' }, { status: 503 });
   const body = (await req.json().catch(() => ({}))) as { action?: string; id?: string; date?: string; time?: string; start?: number; notify?: boolean };
   try {
     if (body.action === 'cancel' && body.id) {

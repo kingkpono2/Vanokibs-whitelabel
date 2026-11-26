@@ -1,6 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import content from '@/content/editable.json';
-import { kv, kvPipeline } from './kv';
+import { kv, kvConfigured, kvPipeline } from './kv';
+import { db, mysqlConfigured } from './db';
+
+/** Bookings are stored in MySQL when MYSQL_* is set (cPanel hosting), otherwise in Upstash Redis. */
+export const storageConfigured = () => mysqlConfigured() || kvConfigured();
+const useMysql = () => mysqlConfigured();
 
 export const settings = content.booking;
 const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const;
@@ -72,6 +77,16 @@ export type Taken = { booked: Set<number>; blockedSlots: Set<number>; blockedDay
 
 export async function takenSlots(): Promise<Taken> {
   const now = Date.now();
+  if (useMysql()) {
+    const pool = await db();
+    const [rows] = await pool.query('SELECT active_slot FROM bookings WHERE active_slot BETWEEN ? AND ?', [now - 86400_000, now + 400 * 86400_000]);
+    const blocked = await listBlocked();
+    return {
+      booked: new Set((rows as { active_slot: number }[]).map((r) => Number(r.active_slot))),
+      blockedSlots: new Set(blocked.slots.map(Number)),
+      blockedDays: new Set(blocked.days),
+    };
+  }
   const [booked, slots, days] = (await kvPipeline([
     ['ZRANGE', 'bk:index', now - 86400_000, now + 400 * 86400_000, 'BYSCORE'],
     ['SMEMBERS', 'bk:blocked:slots'],
@@ -122,6 +137,18 @@ export type Booking = {
 export async function createBooking(input: Omit<Booking, 'id' | 'end' | 'createdAt' | 'status'>): Promise<Booking | 'taken'> {
   const id = randomUUID();
   const booking: Booking = { ...input, id, end: input.start + Number(settings.meetingMinutes) * 60_000, createdAt: Date.now(), status: 'confirmed' };
+  if (useMysql()) {
+    const pool = await db();
+    try {
+      // active_slot is UNIQUE: a second request for the same time fails and gets "taken".
+      await pool.query('INSERT INTO bookings (id, start_ms, active_slot, status, data, created_ms) VALUES (?, ?, ?, ?, ?, ?)',
+        [id, booking.start, booking.start, booking.status, JSON.stringify(booking), booking.createdAt]);
+    } catch (err) {
+      if ((err as { code?: string }).code === 'ER_DUP_ENTRY') return 'taken';
+      throw err;
+    }
+    return booking;
+  }
   // Claim the slot atomically: a second request for the same time gets "taken".
   const claimed = await kv<string | null>('SET', `bk:slot:${input.start}`, id, 'NX', 'EX', 400 * 86400);
   if (claimed !== 'OK') return 'taken';
@@ -134,6 +161,12 @@ export async function createBooking(input: Omit<Booking, 'id' | 'end' | 'created
 
 export async function listBookings(daysBack = 30): Promise<Booking[]> {
   const now = Date.now();
+  if (useMysql()) {
+    const pool = await db();
+    const [rows] = await pool.query("SELECT data FROM bookings WHERE status = 'confirmed' AND start_ms BETWEEN ? AND ? ORDER BY start_ms",
+      [now - daysBack * 86400_000, now + 400 * 86400_000]);
+    return (rows as { data: string }[]).map((r) => JSON.parse(r.data) as Booking);
+  }
   const members = await kv<string[]>('ZRANGE', 'bk:index', now - daysBack * 86400_000, now + 400 * 86400_000, 'BYSCORE');
   if (!members.length) return [];
   const raw = (await kvPipeline(members.map((m) => ['GET', `bk:item:${m.split('|')[1]}`]))) as (string | null)[];
@@ -141,6 +174,16 @@ export async function listBookings(daysBack = 30): Promise<Booking[]> {
 }
 
 export async function cancelBooking(id: string) {
+  if (useMysql()) {
+    const pool = await db();
+    const [rows] = await pool.query("SELECT data FROM bookings WHERE id = ? AND status = 'confirmed'", [id]);
+    const row = (rows as { data: string }[])[0];
+    if (!row) return false;
+    const b = JSON.parse(row.data) as Booking;
+    b.status = 'cancelled';
+    await pool.query("UPDATE bookings SET status = 'cancelled', active_slot = NULL, data = ? WHERE id = ?", [JSON.stringify(b), id]);
+    return b;
+  }
   const raw = await kv<string | null>('GET', `bk:item:${id}`);
   if (!raw) return false;
   const b = JSON.parse(raw) as Booking;
@@ -154,8 +197,26 @@ export async function cancelBooking(id: string) {
 }
 
 export async function setBlocked(kind: 'day' | 'slot', value: string, blocked: boolean) {
+  if (useMysql()) {
+    const pool = await db();
+    if (blocked) await pool.query('INSERT IGNORE INTO booking_blocks (kind, value) VALUES (?, ?)', [kind, value]);
+    else await pool.query('DELETE FROM booking_blocks WHERE kind = ? AND value = ?', [kind, value]);
+    return;
+  }
   const key = kind === 'day' ? 'bk:blocked:days' : 'bk:blocked:slots';
   await kv(blocked ? 'SADD' : 'SREM', key, value);
+}
+
+/** Blocked days (YYYY-MM-DD) and blocked slot start times (UTC ms, as strings). */
+export async function listBlocked(): Promise<{ days: string[]; slots: string[] }> {
+  if (useMysql()) {
+    const pool = await db();
+    const [rows] = await pool.query('SELECT kind, value FROM booking_blocks');
+    const list = rows as { kind: string; value: string }[];
+    return { days: list.filter((r) => r.kind === 'day').map((r) => r.value), slots: list.filter((r) => r.kind === 'slot').map((r) => r.value) };
+  }
+  const [days, slots] = (await kvPipeline([['SMEMBERS', 'bk:blocked:days'], ['SMEMBERS', 'bk:blocked:slots']])) as [string[], string[]];
+  return { days, slots };
 }
 
 /* ------------------------------------------------------------- calendar file */

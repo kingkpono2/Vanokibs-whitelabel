@@ -1,5 +1,4 @@
-import { kvConfigured } from '@/lib/kv';
-import { createBooking, freeSlots, icsFor, localDate, longLabel, settings, takenSlots } from '@/lib/booking';
+import { storageConfigured, createBooking, freeSlots, icsFor, localDate, longLabel, settings, takenSlots } from '@/lib/booking';
 import { notifyAddress, sendMail } from '@/lib/mail';
 import { brand } from '@/content/brand';
 import { serviceBySlug } from '@/content/services';
@@ -9,7 +8,7 @@ const recent = new Map<string, number[]>();
 const clean = (v: unknown, max: number) => String(v ?? '').replace(/[\r\n]+/g, ' ').trim().slice(0, max);
 
 export async function POST(req: Request) {
-  if (!kvConfigured() || !settings.enabled) return Response.json({ message: 'Online booking is not available yet.' }, { status: 503 });
+  if (!storageConfigured() || !settings.enabled) return Response.json({ message: 'Online booking is not available yet.' }, { status: 503 });
   const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim() || 'unknown';
   const now = Date.now();
   const hits = (recent.get(ip) || []).filter((t) => now - t < 3600_000);

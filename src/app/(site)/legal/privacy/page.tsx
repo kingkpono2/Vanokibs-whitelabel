@@ -25,7 +25,7 @@ export default function Privacy() {
             <li>We do not sell personal information or use it for unrelated marketing without your consent, in line with CASL.</li>
           </ul>
           <h2>Where it is stored</h2>
-          <p>Our website is hosted on Vercel, consultation bookings are stored with our database provider Upstash, and payments are processed by Stripe. These providers may process data outside Canada. Client systems we manage are hosted in Canadian regions where available and requested.</p>
+          <p>Our website and its database, which stores consultation bookings, are hosted by Namecheap, and payments are processed by Stripe. These providers may process data outside Canada. Client systems we manage are hosted in Canadian regions where available and requested.</p>
           <h2>Your rights</h2>
           <p>You may ask to access, correct or delete your personal information, or withdraw consent, by contacting us{brand.email ? ` at ${brand.email}` : ' through our contact form'}. We respond within 30 days.</p>
           <h2>Cookies</h2>

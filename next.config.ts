@@ -9,6 +9,8 @@ const securityHeaders = [
 ];
 
 const config: NextConfig = {
+  // A self-contained server (server.js + only the needed node_modules) for Node hosting such as cPanel.
+  output: 'standalone',
   poweredByHeader: false,
   images: { formats: ['image/avif', 'image/webp'] },
   async headers() {
