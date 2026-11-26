@@ -4,6 +4,7 @@ import { services } from '@/content/services';
 import { Breadcrumbs, CtaBand, FaqList, PageHero } from '@/components/Bits';
 import { JsonLd } from '@/components/JsonLd';
 import { faqLd, pageMeta } from '@/lib/seo';
+import { brand } from '@/content/brand';
 
 export const metadata: Metadata = pageMeta({
   title: 'Frequently Asked Questions',
@@ -12,7 +13,7 @@ export const metadata: Metadata = pageMeta({
 });
 
 const general = [
-  { q: 'Who is Vanokibs for?', a: 'Canadian small and mid-sized businesses, start-ups and non-profits that need senior technology skills (IT, software, DevOps, ecommerce or ERP) without hiring a full in-house team.' },
+  { q: `Who is ${brand.name} for?`, a: 'Canadian small and mid-sized businesses, start-ups and non-profits that need senior technology skills (IT, software, DevOps, ecommerce or ERP) without hiring a full in-house team.' },
   { q: 'Do I need a subscription to work with you?', a: 'No. You can buy a fixed-price package, prepaid hours or pay as you go. Subscriptions simply give you a dedicated team, guaranteed response times and lower hourly cost.' },
   { q: 'Where is your team?', a: 'We work remotely across Canada, with support hours that cover Atlantic to Pacific time. On-site visits can be arranged in major cities.' },
   { q: 'Will you sign an NDA?', a: 'Yes, on request before we discuss confidential details. Our terms of service also include confidentiality obligations.' },

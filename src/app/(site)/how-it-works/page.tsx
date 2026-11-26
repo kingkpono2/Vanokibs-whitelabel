@@ -3,10 +3,11 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Breadcrumbs, CtaBand, PageHero, Check } from '@/components/Bits';
 import { pageMeta } from '@/lib/seo';
+import { brand } from '@/content/brand';
 
 export const metadata: Metadata = pageMeta({
   title: 'How It Works: Hiring an On-Demand Technology Team',
-  description: 'How Vanokibs works with Canadian businesses: free consultation, a written plan and price, secure onboarding, then regular delivery, reporting and a shared roadmap.',
+  description: `How ${brand.name} works with Canadian businesses: free consultation, a written plan and price, secure onboarding, then regular delivery, reporting and a shared roadmap.`,
   path: '/how-it-works',
 });
 
