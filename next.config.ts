@@ -13,6 +13,17 @@ const config: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
   images: { formats: ['image/avif', 'image/webp'] },
+  // The site moved to cobalthelm.com (2026-11-26): the old Vercel addresses send visitors there.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: '(?<vercelhost>.*\\.vercel\\.app)' }],
+        destination: 'https://cobalthelm.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
