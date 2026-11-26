@@ -43,7 +43,7 @@ export function Footer() {
         </nav>
       </div>
       <div className="container footer-bottom">
-        <p>© {new Date().getFullYear()} {brand.name}.{brand.legalName !== brand.name ? ` ${brand.name} is a registered trade name of ${brand.legalName}.` : ''}{SHOW_PRICES ? ' All prices in Canadian dollars, before applicable taxes.' : ''}</p>
+        <p>© {new Date().getFullYear()} {brand.name}.{brand.legalName !== brand.name ? ` ${brand.name} is a registered trade name of ${brand.legalName}${brand.legalName.endsWith('.') ? '' : '.'}` : ''}{SHOW_PRICES ? ' All prices in Canadian dollars, before applicable taxes.' : ''}</p>
       </div>
     </footer>
   );
